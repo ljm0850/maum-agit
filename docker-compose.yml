@@ -53,10 +53,11 @@ services: # 이 섹션 아래에 우리가 실행할 개별 서비스들을 정�
     ports: # 로컬에서 직접 MySQL 클라이언트(예: MySQL Workbench, TablePlus)로 접속할 경우 필요합니다.
       - "3306:3306" # 호스트의 3306번 포트를 컨테이너의 3306번 포트에 연결 (MySQL 기본 포트)
     environment: # 컨테이너 내부에서 사용할 환경 변수들을 직접 정의합니다. (MySQL 설정용)
-      MYSQL_ROOT_PASSWORD: root_password_dev # MySQL root 계정의 비밀번호
-      MYSQL_USER: maum_agit_user # 새로 생성할 MySQL 사용자 이름
-      MYSQL_PASSWORD: maum_agit_password # 새로 생성할 MySQL 사용자의 비밀번호
-      MYSQL_DATABASE: maum_agit_db_dev # 새로 생성할 데이터베이스 이름
+    # 직접 명시하는 대신, .env 파일에서 불러올 변수들을 나열 (실제 값은 .env에)
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # .env에서 불러올 변수명
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes: # 데이터베이스 데이터의 영속성을 위해 볼륨을 마운트합니다.
       - db_data:/var/lib/mysql # 'db_data'라는 이름의 Docker 볼륨을 컨테이너 내부의 MySQL 데이터 저장 경로에 마운트합니다. 이렇게 하면 컨테이너를 삭제해도 데이터는 보존됩니다.
     # - ./mysql_init:/docker-entrypoint-initdb.d # 선택 사항: 이 줄의 주석을 풀면, 'mysql_init' 폴더 안에 있는 .sql 파일들을 컨테이너 시작 시 자동으로 실행하여 초기 스키마나 데이터를 로드할 수 있습니다.
