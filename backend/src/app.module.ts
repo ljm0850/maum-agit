@@ -5,6 +5,10 @@ import { AppService } from './app.service';
 // 추가 외부 라이브러리 import
 import { TypeOrmModule } from '@nestjs/typeorm'; // TypeORMModule 사용
 import { ConfigModule } from '@nestjs/config'; // 환경 변수 관리를 위한 ConfigModule
+// 하위 모듈
+import { UserModule } from './user/user.module';
+import { PostModule } from './post/post.module';
+
 // 작성한 엔티티 import
 // import { User } from './user/user.entity';
 // import { Post } from './post/post.entity';
@@ -19,7 +23,7 @@ import { ConfigModule } from '@nestjs/config'; // 환경 변수 관리를 위한
   imports: [
     ConfigModule.forRoot({
       // .env 파일 로드를 위한 설정
-      isGlobal: true, // 전역적으로 환경 변수를 사용할 수 있게 함, 다른 모듈에서 ConfigService를 별도로 임포트/익스포트하지 않아도 사용 가능
+      isGlobal: true, // 전역적으로 환경 변수를 사용할 수 있게 함, 다른 모듈`에서 ConfigService를 별도로 임포트/익스포트하지 않아도 사용 가능
       envFilePath: '.env', // .env 파일 경로 지정
     }),
     // TypeOrmModule 설정: 데이터베이스 연결 설정을 정의
@@ -34,6 +38,9 @@ import { ConfigModule } from '@nestjs/config'; // 환경 변수 관리를 위한
       synchronize: true, // 개발 환경에서만 true로 설정 (데이터베이스 스키마를 자동으로 동기화. 운영에서는 false)
       logging: true, // SQL 쿼리 로깅 활성화 (개발 시 유용)
     }),
+    // 하위 모듈
+    UserModule,
+    PostModule,
   ],
   // controllers 배열: 이 모듈에 속한 HTTP 요청 처리 컨트롤러들을 등록
   controllers: [AppController],
