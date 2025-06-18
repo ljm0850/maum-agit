@@ -4,14 +4,14 @@ import { AppController } from './app.controller'; //
 import { AppService } from './app.service';
 // 추가 외부 라이브러리 import
 import { TypeOrmModule } from '@nestjs/typeorm'; // TypeORMModule 사용
-import { ConfigModule } from '@nestjs/config'; // 환경 변수 관리를 위한 ConfigModule
+import { ConfigModule, ConfigService } from '@nestjs/config'; // 환경 변수 관리
 // 하위 모듈
 import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
 
 // 작성한 엔티티 import
-// import { User } from './user/user.entity';
-// import { Post } from './post/post.entity';
+import { User } from './user/user.entity';
+import { Post } from './post/post.entity';
 // import { Image } from './image/image.entity';
 // import { Tag } from './tag/tag.entity';
 // import { PostTag } from './post-tag/post-tag.entity';
@@ -27,16 +27,21 @@ import { PostModule } from './post/post.module';
       envFilePath: '.env', // .env 파일 경로 지정
     }),
     // TypeOrmModule 설정: 데이터베이스 연결 설정을 정의
-    TypeOrmModule.forRoot({
-      type: 'mysql', // 데이터베이스 타입
-      host: process.env.DATABASE_HOST,
-      port: parseInt(process.env.DATABASE_PORT ?? '3306', 10),
-      username: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      entities: [], // 데이터베이스 엔티티들을 배열로 추가
-      synchronize: true, // 개발 환경에서만 true로 설정 (데이터베이스 스키마를 자동으로 동기화. 운영에서는 false)
-      logging: true, // SQL 쿼리 로깅 활성화 (개발 시 유용)
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      // ConfigService를 주입받아 .env 파일에서 DB 연결 정보를 가져와 TypeORM에게 넘겨주는 공장 역할
+      useFactory: (configService: ConfigService) => ({
+        type: 'mysql', // 데이터베이스 타입
+        host: configService.get<string>('DATABASE_HOST'),
+        port: configService.get<number>('DATABASE_PORT'),
+        username: configService.get<string>('DATABASE_USER'),
+        password: configService.get<string>('DATABASE_PASSWORD'),
+        database: configService.get<string>('DATABASE_NAME'),
+        entities: [User, Post], // 데이터베이스 엔티티들을 배열로 추가
+        synchronize: true, // 개발 환경에서만 true로 설정 (데이터베이스 스키마를 자동으로 동기화. 운영에서는 false)
+        logging: true, // SQL 쿼리 로깅 활성화 (개발 시 유용)
+      }),
     }),
     // 하위 모듈
     UserModule,
