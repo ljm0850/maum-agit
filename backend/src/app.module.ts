@@ -12,9 +12,9 @@ import { PostModule } from './post/post.module';
 // 작성한 엔티티 import
 import { User } from './user/user.entity';
 import { Post } from './post/post.entity';
-// import { Image } from './image/image.entity';
-// import { Tag } from './tag/tag.entity';
-// import { PostTag } from './post-tag/post-tag.entity';
+import { Image } from './post/image/image.entity';
+import { Tag } from './post/tag/tag.entity';
+import { PostTag } from './post/post-tag/post-tag.entity';
 
 // @Module() 데코레이터: 이 클래스가 NestJS 모듈임을 선언
 // 모듈은 애플리케이션의 특정 기능 영역을 나타냄(관련된 컨트롤러, 프로바이더, 다른 모듈을 묶음)
@@ -38,7 +38,7 @@ import { Post } from './post/post.entity';
         username: configService.get<string>('DATABASE_USER'),
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
-        entities: [User, Post], // 데이터베이스 엔티티들을 배열로 추가
+        entities: [User, Post, Image, Tag, PostTag], // 데이터베이스 엔티티들을 배열로 추가
         synchronize: true, // 개발 환경에서만 true로 설정 (데이터베이스 스키마를 자동으로 동기화. 운영에서는 false)
         logging: true, // SQL 쿼리 로깅 활성화 (개발 시 유용)
       }),

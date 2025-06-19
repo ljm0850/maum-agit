@@ -6,8 +6,11 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { User } from '../user/user.entity';
+import { Image } from './image/image.entity';
+import { PostTag } from './post-tag/post-tag.entity';
 
 @Entity('posts') // 테이블 이름 posts
 export class Post {
@@ -38,4 +41,12 @@ export class Post {
 
   @UpdateDateColumn({ name: 'updated_at' }) // 업데이트 일
   updatedAt: Date;
+
+  // Image 엔티티와의 관계 (OneToMany)
+  @OneToMany(() => Image, (image) => image.post)
+  images: Image[];
+
+  // PostTag 엔티티와의 관계 (OneToMany)
+  @OneToMany(() => PostTag, (postTag) => postTag.post)
+  postTags: PostTag[];
 }
