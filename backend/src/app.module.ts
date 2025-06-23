@@ -5,11 +5,10 @@ import { AppService } from './app.service';
 // 추가 외부 라이브러리 import
 import { TypeOrmModule } from '@nestjs/typeorm'; // TypeORMModule 사용
 import { ConfigModule, ConfigService } from '@nestjs/config'; // 환경 변수 관리
-// 하위 모듈
+// 작성한 모듈 & 엔티티
 import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
-
-// 작성한 엔티티 import
+import { AuthModule } from './auth/auth.module';
 import { User } from './user/user.entity';
 import { Post } from './post/post.entity';
 import { Image } from './post/image/image.entity';
@@ -38,7 +37,7 @@ import { PostTag } from './post/post-tag/post-tag.entity';
         username: configService.get<string>('DATABASE_USER'),
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
-        entities: [User, Post, Image, Tag, PostTag], // 데이터베이스 엔티티들을 배열로 추가
+        entities: [User, Post, Image, Tag, PostTag, AuthModule], // 데이터베이스 엔티티들을 배열로 추가
         synchronize: true, // 개발 환경에서만 true로 설정 (데이터베이스 스키마를 자동으로 동기화. 운영에서는 false)
         logging: true, // SQL 쿼리 로깅 활성화 (개발 시 유용)
       }),
@@ -46,6 +45,7 @@ import { PostTag } from './post/post-tag/post-tag.entity';
     // 하위 모듈
     UserModule,
     PostModule,
+    AuthModule,
   ],
   // controllers 배열: 이 모듈에 속한 HTTP 요청 처리 컨트롤러들을 등록
   controllers: [AppController],
