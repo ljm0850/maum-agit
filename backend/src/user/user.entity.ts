@@ -14,10 +14,10 @@ export class User {
   id: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true }) // nullable: true로 설정 (OAuth에서 제공 안 할 수 있음)
-  username: string;
+  username: string | null;
 
   @Column({ type: 'varchar', length: 255, unique: true, nullable: true }) // unique: true, nullable: true
-  email: string;
+  email: string | null;
 
   @Column({ type: 'varchar', length: 50, nullable: false }) // provider_name은 필수
   providerName: string;
@@ -27,7 +27,7 @@ export class User {
   providerId: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  profileImageUrl: string;
+  profileImageUrl: string | null;
 
   @CreateDateColumn() // 생성일시 (자동 생성)
   createdAt: Date;
