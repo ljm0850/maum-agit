@@ -1,4 +1,3 @@
-// maum-agit/backend/src/user/user.controller.ts
 import {
   Controller,
   Get,
@@ -12,7 +11,7 @@ import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from './user.entity';
-import { RequestWithUser } from '../common/interfaces/request-with-user.interface'; // <-- 새로 만든 인터페이스 임포트
+import { RequestWithUser } from '../common/interfaces/request-with-user.interface';
 
 @Controller('users')
 export class UserController {

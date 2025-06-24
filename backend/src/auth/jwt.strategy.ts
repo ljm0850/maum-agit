@@ -19,7 +19,7 @@ export interface JwtPayload {
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   // `PassportStrategy(Strategy, 'jwt')` 설명:
   // - `Strategy`: `passport-jwt`에서 가져온 JWT 인증 로직의 핵심 클래스
-  // - `'jwt'`: 이 전략의 이름을 'jwt'로 지정. 나중에 `@UseGuards(AuthGuard('jwt'))`에서 이 이름을 사용해요.
+  // - `'jwt'`: 이 전략의 이름을 'jwt'로 지정. `@UseGuards(AuthGuard('jwt'))`
 
   constructor(
     private configService: ConfigService, // 환경 변수 (JWT_SECRET) 접근을 위해 주입
