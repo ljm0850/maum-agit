@@ -1,24 +1,30 @@
 import {
   Controller,
   Post,
+  Get,
   Body,
   UseGuards,
   Req,
   HttpCode,
   HttpStatus,
+  HttpException,
   Logger,
+  Query,
+  Param,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'; // JWT 인증 가드 임포트
 import { RequestWithUser } from '../common/interfaces/request-with-user.interface'; // 커스텀 Request 인터페이스 임포트
 import { Post as PostEntity } from './post.entity'; // Post 엔티티와 NestJS Post 데코레이터 이름 충돌 방지
+import { GetPostsDto } from './dto/get-post.dto';
 
 @Controller('posts')
 export class PostController {
   private readonly logger = new Logger(PostController.name); //디버깅용
   constructor(private readonly postService: PostService) {}
 
+  // 게시글 생성
   @Post() // post 요청
   @UseGuards(JwtAuthGuard) // jwt 요구
   @HttpCode(HttpStatus.CREATED) // 성공시 201 Created 반환
@@ -46,6 +52,63 @@ export class PostController {
         );
       }
       throw error; // 에러를 다시 던져 NestJS의 예외 필터가 처리하도록 합니다.
+    }
+  }
+  // 내 게시글 목록
+  @UseGuards(JwtAuthGuard)
+  @Get('')
+  @HttpCode(HttpStatus.OK)
+  async getMyPosts(
+    @Query() getPostsDto: GetPostsDto,
+    @Req() req: RequestWithUser,
+  ): Promise<PostEntity[]> {
+    const userId = req.user.id; // 로그인된 id
+    this.logger.log(
+      `Attempting to retrieve posts for user: ${userId} with query: ${JSON.stringify(getPostsDto)}`,
+    );
+    try {
+      const posts = await this.postService.findAllPostsByUserId(
+        userId,
+        getPostsDto,
+      );
+      this.logger.log(
+        `Successfully retrieved ${posts.length} posts for user: ${userId}`,
+      );
+      return posts;
+    } catch (error) {
+      this.logger.error(`Failed to retrieve posts for user ${userId}`, error);
+      throw error;
+    }
+  }
+
+  // 내 게시글 조회
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async getMyPostById(
+    @Param('id') id: string,
+    @Req() req: RequestWithUser,
+  ): Promise<PostEntity> {
+    const userId = req.user.id;
+    this.logger.log(
+      `Attempting to retrieve post with ID: ${id} for user: ${userId}`,
+    );
+    try {
+      const post = await this.postService.findPostByIdAndUserId(id, userId);
+      if (!post)
+        throw new HttpException(
+          'Post not found or you do not have permission to access this post',
+          HttpStatus.NOT_FOUND,
+        );
+      this.logger.log(
+        `Successfully retrieved post with ID: ${id} for user: ${userId}`,
+      );
+      return post;
+    } catch (error) {
+      this.logger.error(
+        `Failed to retrieve post by ID: ${id} for user ${userId}`,
+      );
+      throw error;
     }
   }
 }
