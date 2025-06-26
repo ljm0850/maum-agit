@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Post } from './post.entity';
 import { Image } from './image/image.entity';
 import { Tag } from './tag/tag.entity';
@@ -8,9 +8,11 @@ import { PostTag } from './post-tag/post-tag.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { User } from '../user/user.entity';
 import { GetPostsDto } from './dto/get-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class PostService {
+  private readonly logger = new Logger(PostService.name);
   constructor(
     // 각 엔티티의 Repository를 주입합니다.
     @InjectRepository(Post)
@@ -102,5 +104,37 @@ export class PostService {
       where: { id, user: { id: userId } },
       relations: ['user', 'images', 'postTags', 'postTags.tag'],
     });
+  }
+  // 글 삭제
+  async deletePost(postId: string, userId: string): Promise<void> {
+    const post = await this.postRepository.findOne({
+      where: { id: postId, user: { id: userId } },
+      relations: ['images', 'postTags'],
+    });
+    if (!post)
+      throw new HttpException(
+        'Post not found or you do not have permission to delete this post',
+        HttpStatus.NOT_FOUND,
+      );
+    await this.postRepository.remove(post);
+    this.logger.log(
+      `Post ${postId} and its related data deleted successfully (via cascade).`,
+    );
+  }
+  // 글 수정
+  async updatePost(
+    postId: string,
+    userId: string,
+    updatePostDto: UpdatePostDto,
+  ): Promise<Post> {
+    const post = await this.findPostByIdAndUserId(postId, userId);
+    if (!post)
+      throw new HttpException(
+        'Post not found or you do not have permission to update this post',
+        HttpStatus.NOT_FOUND,
+      );
+    Object.assign(post, updatePostDto); //객체 프로퍼티 덮어씌우기
+    const updatedPost = await this.postRepository.save(post);
+    return updatedPost;
   }
 }

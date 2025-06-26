@@ -36,6 +36,6 @@ export class User {
   updatedAt: Date;
 
   // 관계 정의: 한 User는 여러 Post를 가질 수 있습니다.
-  @OneToMany(() => Post, (post) => post.user) // (다른 엔티티) => 다른 엔티티의 관계 컬럼
+  @OneToMany(() => Post, (post) => post.user, { cascade: true }) // (다른 엔티티) => 다른 엔티티의 관계 컬럼
   posts: Post[]; // 해당 User가 작성한 Post 배열
 }

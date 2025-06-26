@@ -11,6 +11,8 @@ import {
   Logger,
   Query,
   Param,
+  Delete,
+  Patch,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -18,6 +20,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'; // JWT 인증 가�
 import { RequestWithUser } from '../common/interfaces/request-with-user.interface'; // 커스텀 Request 인터페이스 임포트
 import { Post as PostEntity } from './post.entity'; // Post 엔티티와 NestJS Post 데코레이터 이름 충돌 방지
 import { GetPostsDto } from './dto/get-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller('posts')
 export class PostController {
@@ -56,7 +59,7 @@ export class PostController {
   }
   // 내 게시글 목록
   @UseGuards(JwtAuthGuard)
-  @Get('')
+  @Get()
   @HttpCode(HttpStatus.OK)
   async getMyPosts(
     @Query() getPostsDto: GetPostsDto,
@@ -108,6 +111,58 @@ export class PostController {
       this.logger.error(
         `Failed to retrieve post by ID: ${id} for user ${userId}`,
       );
+      throw error;
+    }
+  }
+
+  // 글 삭제
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deletePostById(
+    @Param('id') id: string,
+    @Req() req: RequestWithUser,
+  ): Promise<void> {
+    const userId = req.user.id;
+    this.logger.log(
+      `Attempting to delete post with ID: ${id} by user: ${userId}`,
+    );
+    try {
+      await this.postService.deletePost(id, userId);
+      this.logger.log(
+        `Post with ID: ${id} deleted successfully by user: ${userId}`,
+      );
+    } catch (error) {
+      this.logger.error(`Failed to delete post`, error);
+      throw error;
+    }
+  }
+  // 글 업데이트
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id')
+  @HttpCode(HttpStatus.OK)
+  async updatePost(
+    @Param('id') id: string,
+    @Body() updatePostDto: UpdatePostDto,
+    @Req() req: RequestWithUser,
+  ): Promise<PostEntity> {
+    const userId = req.user.id;
+    this.logger.log(
+      `Attempting to update post with ID: ${id} by user: ${userId}`,
+    );
+    this.logger.debug(`Update data: ${JSON.stringify(updatePostDto)}`);
+    try {
+      const updatedPost = await this.postService.updatePost(
+        id,
+        userId,
+        updatePostDto,
+      );
+      this.logger.log(
+        `Post with ID: ${id} updated successfully by user: ${userId}`,
+      );
+      return updatedPost;
+    } catch (error) {
+      this.logger.error(`Failed to update post`, error);
       throw error;
     }
   }

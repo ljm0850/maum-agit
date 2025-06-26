@@ -24,7 +24,7 @@ export class Post {
   @Column({ type: 'uuid', name: 'user_id', nullable: false }) // name 옵션으로 실제 DB 컬럼명 지정
   userId: string;
 
-  @ManyToOne(() => User, (user) => user.posts) // 1:N
+  @ManyToOne(() => User, (user) => user.posts, { onDelete: 'CASCADE' }) // 1:N
   @JoinColumn({ name: 'user_id' })
   user: User;
 
@@ -43,10 +43,10 @@ export class Post {
   updatedAt: Date;
 
   // Image 엔티티와의 관계 (OneToMany)
-  @OneToMany(() => Image, (image) => image.post)
+  @OneToMany(() => Image, (image) => image.post, { cascade: true })
   images: Image[];
 
   // PostTag 엔티티와의 관계 (OneToMany)
-  @OneToMany(() => PostTag, (postTag) => postTag.post)
+  @OneToMany(() => PostTag, (postTag) => postTag.post, { cascade: true })
   postTags: PostTag[];
 }
