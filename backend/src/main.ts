@@ -28,6 +28,12 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT') || 3001; // .env의 PORT 사용 또는 기본 3001
 
+  app.enableCors({
+    origin: 'http://localhost:3002', // 프론트엔드 개발 서버 포트
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
+
   await app.listen(port); // Docker 내부 포트 3001로 고정 또는 환경 변수 사용
 }
 bootstrap();

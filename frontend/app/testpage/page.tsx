@@ -1,4 +1,5 @@
-import { CounterDisplay } from "@/src/components/counter/CounterDisplay";
+import { CounterDisplay } from "@/src/components/testComponent/CounterDisplay";
+import UserInfoComponent from '@/src/components/testComponent/UserInfoComponent';
 // 가상의 API 호출
 const queryTest = async (delay: number = 1000) => {
   return new Promise((resolve) => {
@@ -16,7 +17,7 @@ export default async function TestPage() {
   return (
     <div>
       <hr/>
-
+      <UserInfoComponent />
       <CounterDisplay />
       <hr style={{ margin: '20px 0', border: 'none', borderTop: '1px dashed #ccc' }} />
 
