@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
+import { getMyInfo,UserInfo } from '@/src/lib/api';
 
 interface SidebarProps {
   isExpanded: boolean;
@@ -8,7 +10,15 @@ interface SidebarProps {
   onHoverChange: (expanded: boolean) => void;
 }
 
+
+
 export default function Sidebar({ isExpanded, onToggle, onHoverChange }: SidebarProps) {
+  const { data: userData, isLoading, isError, error } = useQuery<UserInfo>({
+    queryKey: ['user','me'],
+    queryFn: getMyInfo,
+    staleTime: 1000 * 60 * 5,
+    enabled: true,
+  });
 
   return (
     <nav
@@ -29,6 +39,27 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
         <span>☰</span>
       </div>
 
+      {/* 로그인 정보 */}
+      {isExpanded &&
+      <div style={{padding: '20px', borderRadius: '8px' }}>
+      {userData ? (
+        <div style={{ lineHeight: '1.8' }}>
+          {userData.profileImageUrl && (
+            <p>
+              <img 
+                src={userData.profileImageUrl} 
+                alt="Profile" 
+                style={{ width: '50px', height: '50px', borderRadius: '50%', verticalAlign: 'middle' }} 
+                />
+            </p>
+          )}
+          <p>{userData.username}님 안녕하세요.</p>
+        </div>
+      ) : (
+        <p>로그인이 필요합니다.</p>
+      )}
+        </div>}
+
       {/* 내비게이션 아이템 목록 */}
       <ul style={{ listStyle: 'none', padding: 0, width: '100%' }}>
         <li>
@@ -38,10 +69,10 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
           </Link>
         </li>
         <li>
-          <Link href="/users" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'white' }}>
+          {/* <Link href="/users" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'white' }}>
             <span>👤</span>
             {isExpanded && <span>사용자</span>}
-          </Link>
+          </Link> */}
         </li>
         <li>
           <Link href="https://github.com/ljm0850">
