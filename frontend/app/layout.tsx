@@ -1,9 +1,6 @@
-import './globals.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { QueryProvider } from '../src/providers/query-provider';
-
-const inter = Inter({ subsets: ['latin'] });
+import ClientLayout from './clientLayout';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: '마음아지트',
@@ -12,15 +9,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="ko">
-      <body className={inter.className}>
-        <QueryProvider>
+      <body>
+        <ClientLayout>
           {children}
-        </QueryProvider>
+        </ClientLayout>
       </body>
     </html>
   );
