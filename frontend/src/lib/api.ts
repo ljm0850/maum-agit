@@ -1,5 +1,37 @@
 import axios from "axios";
 
+export interface Post {
+  id: number;
+  title: string;
+  content: string;
+  author?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PostListItemDto {
+  id: string;
+  title: string;
+  purifiedContent?: string;
+  createdAt: string;
+  updatedAt: string;
+  tags?: { id: string; name: string }[];
+}
+
+export interface UserInfo {
+    id: string,
+    username: string,
+    email: string,
+    providerName: string,
+    providerId: string,
+    profileImageUrl?: string|null,
+    // createdAt: Date,
+    // updatedAt: Date,
+    createdAt: string,
+    updatedAt: string,
+    posts: Post[],
+}
+
 const API_BASE_URL = '/api/';
 
 export const apiClient = axios.create({
@@ -22,35 +54,29 @@ apiClient.interceptors.request.use(
   }
 );
 
-export interface Post {
-  id: number;
-  title: string;
-  content: string;
-  author?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface UserInfo {
-    id: string,
-    username: string,
-    email: string,
-    providerName: string,
-    providerId: string,
-    profileImageUrl?: string|null,
-    // createdAt: Date,
-    // updatedAt: Date,
-    createdAt: string,
-    updatedAt: string,
-    posts: Post[],
-}
-
 export const getMyInfo = async (): Promise<UserInfo> => {
   const res = await apiClient.get('users/me');
   return res.data;
 }
 
-export const getMyPost = async (): Promise<Post> => {
-  const res = await apiClient.get('posts');
-  return res.data;
+export const getMyPostList = async (
+  page: number=1,
+  limit: number=10,
+  tag?: string
+): Promise<PostListItemDto[]> => {
+  const params: { page: number; limit: number; tag?: string } = {
+    page,
+    limit,
+  };
+  if (tag) params.tag = tag;
+  try {
+    const res = await apiClient.get('posts', { params });
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response){
+      throw new Error(error.response.data.message || `API Error: ${error.response.status}`);
+    } else {
+      throw new Error('알수 없는 에러')
+    }
+  }
 }

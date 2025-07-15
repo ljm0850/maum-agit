@@ -17,6 +17,7 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
     staleTime: 1000 * 60 * 5,
     enabled: true,
   });
+  
 
   return (
     <nav
