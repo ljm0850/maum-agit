@@ -21,6 +21,7 @@ import { RequestWithUser } from '../common/interfaces/request-with-user.interfac
 import { Post as PostEntity } from './post.entity'; // Post 엔티티와 NestJS Post 데코레이터 이름 충돌 방지
 import { GetPostsDto } from './dto/get-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { PostListItemDto } from './dto/post-list-item.dto';
 
 @Controller('posts')
 export class PostController {
@@ -64,7 +65,7 @@ export class PostController {
   async getMyPosts(
     @Query() getPostsDto: GetPostsDto,
     @Req() req: RequestWithUser,
-  ): Promise<PostEntity[]> {
+  ): Promise<PostListItemDto[]> {
     const userId = req.user.id; // 로그인된 id
     this.logger.log(
       `Attempting to retrieve posts for user: ${userId} with query: ${JSON.stringify(getPostsDto)}`,

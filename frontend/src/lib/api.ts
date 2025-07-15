@@ -49,3 +49,8 @@ export const getMyInfo = async (): Promise<UserInfo> => {
   const res = await apiClient.get('users/me');
   return res.data;
 }
+
+export const getMyPost = async (): Promise<Post> => {
+  const res = await apiClient.get('posts');
+  return res.data;
+}

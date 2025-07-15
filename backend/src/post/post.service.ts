@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from './post.entity';
+import { PostListItemDto } from './dto/post-list-item.dto';
 import { Image } from './image/image.entity';
 import { Tag } from './tag/tag.entity';
 import { PostTag } from './post-tag/post-tag.entity';
@@ -77,23 +78,44 @@ export class PostService {
   async findAllPostsByUserId(
     userId: string,
     getPostsDto: GetPostsDto,
-  ): Promise<Post[]> {
+  ): Promise<PostListItemDto[]> {
     const { page, limit, tag } = getPostsDto;
     const skip = ((page ?? 1) - 1) * (limit ?? 10);
     const queryBuilder = this.postRepository
       .createQueryBuilder('post') // 'post'라는 별칭으로 Post엔티티 쿼리 서칭
-      .leftJoinAndSelect('post.user', 'user') // Post와 연관된 User(작성자) 정보를 함께 가져옴
-      .leftJoinAndSelect('post.images', 'images')
+      // .leftJoinAndSelect('post.user', 'user') // 현재는 내 글만 불러와서 작성자 == 로그인유저라 필요 없음
+      // .leftJoinAndSelect('post.images', 'images') // 현재 images는 미구현
       .leftJoinAndSelect('post.postTags', 'postTag')
       .leftJoinAndSelect('postTag.tag', 'tag')
-      .where('post.userId = :userId', { userId }) // :userId를 하두고 userId 객체를 내보내는건 SQL 인젝션 방지
+      .where('post.userId = :userId', { userId }) // :userId를 하고, userId 객체를 내보내는건 SQL 인젝션 방지
       .orderBy('post.createdAt', 'DESC')
       .skip(skip)
-      .take(limit);
+      .take(limit)
+      .select([
+        'post.id',
+        'post.title',
+        'post.createdAt',
+        'post.updatedAt',
+        'post.purifiedContent',
+        'tag.id',
+        'tag.name',
+      ]);
     if (tag) {
       queryBuilder.andWhere('tag.name = :tag', { tag });
     }
-    return queryBuilder.getMany();
+    const posts = await queryBuilder.getMany();
+    return posts.map((post) => {
+      return {
+        id: post.id,
+        title: post.title,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        purifiedContent: post.purifiedContent,
+        tags: post.postTags
+          ? post.postTags.map((pt) => ({ id: pt.tag.id, name: pt.tag.name }))
+          : [],
+      };
+    });
   }
   // 내 글 조회
   async findPostByIdAndUserId(
