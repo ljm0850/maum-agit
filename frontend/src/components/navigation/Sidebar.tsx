@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery,useQueryClient } from '@tanstack/react-query';
 import { getMyInfo,UserInfo } from '@/src/lib/api';
+import LogoutButton from '../ui/LogoutBtn';
 
 interface SidebarProps {
   isExpanded: boolean;
@@ -11,13 +12,13 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isExpanded, onToggle, onHoverChange }: SidebarProps) {
+  // 내 정보
   const { data: userData } = useQuery<UserInfo>({
     queryKey: ['user','me'],
     queryFn: getMyInfo,
     staleTime: 1000 * 60 * 5,
     enabled: true,
   });
-  
 
   return (
     <nav
@@ -87,6 +88,7 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
           {isExpanded && <div>문의: dlwoals0850@gmail.com</div>}
         </li>
       </ul>
+      <LogoutButton></LogoutButton>
     </nav>
   );
 }
