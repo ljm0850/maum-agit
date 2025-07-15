@@ -10,10 +10,8 @@ interface SidebarProps {
   onHoverChange: (expanded: boolean) => void;
 }
 
-
-
 export default function Sidebar({ isExpanded, onToggle, onHoverChange }: SidebarProps) {
-  const { data: userData, isLoading, isError, error } = useQuery<UserInfo>({
+  const { data: userData } = useQuery<UserInfo>({
     queryKey: ['user','me'],
     queryFn: getMyInfo,
     staleTime: 1000 * 60 * 5,

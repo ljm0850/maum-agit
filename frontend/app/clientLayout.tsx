@@ -17,13 +17,16 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   // 로그인 안된 상태로 다른 페이지 접근시 리다이렉트
   const router = useRouter();
   const pathname = usePathname();
+  const pathNameArr = pathname.split('/');
   const isLoginPage = pathname === '/';
   const isAuthCallbackPage = pathname.startsWith('/auth/callback');
   useEffect(()=>{
     const allowRoutes = ['/']; // 로그인 없이 사용가능한 페이지 목록
-    const isAllowRoutes = allowRoutes.some(route => pathname.startsWith(route));
+    const isAllowRoutes = allowRoutes.some(route => pathNameArr.includes(route));
     const accessToken = localStorage.getItem('accessToken');
     // 토큰 없고, 비로그인 사용 불가 페이지 일때
+    console.log(pathname)
+    console.log("허가됨?",isAllowRoutes)
     if (!accessToken && !isAllowRoutes) {
       alert('로그인이 필요한 서비스입니다.');
       router.replace('');
