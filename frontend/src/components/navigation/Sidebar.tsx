@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useQuery,useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getMyInfo,UserInfo } from '@/src/lib/api';
 import LogoutButton from '../ui/LogoutBtn';
 
@@ -44,15 +44,6 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
       <div style={{padding: '20px', borderRadius: '8px' }}>
       {userData ? (
         <div style={{ lineHeight: '1.8' }}>
-          {userData.profileImageUrl && (
-            <p>
-              <img 
-                src={userData.profileImageUrl} 
-                alt="Profile" 
-                style={{ width: '50px', height: '50px', borderRadius: '50%', verticalAlign: 'middle' }} 
-                />
-            </p>
-          )}
           <p>{userData.username}님 안녕하세요.</p>
         </div>
       ) : (

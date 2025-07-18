@@ -1,17 +1,9 @@
 import axios from "axios";
 
 export interface Post {
-  id: number;
-  title: string;
-  content: string;
-  author?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface PostListItemDto {
   id: string;
   title: string;
+  originalContent?: string;
   purifiedContent?: string;
   createdAt: string;
   updatedAt: string;
@@ -63,7 +55,7 @@ export const getMyPostList = async (
   page: number=1,
   limit: number=10,
   tag?: string
-): Promise<PostListItemDto[]> => {
+): Promise<Post[]> => {
   const params: { page: number; limit: number; tag?: string } = {
     page,
     limit,
@@ -78,5 +70,15 @@ export const getMyPostList = async (
     } else {
       throw new Error('알수 없는 에러')
     }
+  }
+}
+
+export const getMyPostById = async (id:string): Promise<Post> => {
+  try {
+    const res = await apiClient.get(`posts/${id}`)
+    return res.data
+  } catch (error) {
+    console.log('글 조회 에러',error)
+    throw new Error('글 조회에서 에러 발생')
   }
 }

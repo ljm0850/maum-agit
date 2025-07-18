@@ -1,9 +1,9 @@
 import * as React from 'react';
+import ArticleDetail from '@/src/components/articles/articleDetail';
+
 export default function DetailPost({params,}: {params: Promise<{ id: string }>;}) {
-  const { id } =  React.use(params)
+  const { id } : {id:string} =  React.use(params);
   return (
-    <div>
-      {id}번 게시글 확인
-    </div>
+    <ArticleDetail id={id}></ArticleDetail>
   );
 }

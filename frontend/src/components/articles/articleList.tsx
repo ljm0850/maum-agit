@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getMyPostList, PostListItemDto } from '@/src/lib/api';
-import ArticleItem from './articleItem';
+import { getMyPostList, Post } from '@/src/lib/api';
+import ArticleItem from './articleListItem';
 // import { usePathname } from 'next/navigation';
 
 export default function ArticleList(){
@@ -12,12 +12,11 @@ export default function ArticleList(){
   const limit = 10;
   const [currentTag, setCurrentTag] = useState<string | undefined>(undefined);
 
-  const { data: articles, isLoading, isError } = useQuery<PostListItemDto[]>({
+  const { data: articles, isLoading, isError } = useQuery<Post[]>({
     queryKey: ['articles', currentPage, limit, currentTag],
     queryFn:()=>getMyPostList(currentPage, limit, currentTag),
     staleTime: 1000 * 60 * 5,
   })
-  console.log(articles)
   // 로딩중
   if (isLoading){
     return (
