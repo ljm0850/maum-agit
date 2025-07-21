@@ -3,11 +3,20 @@ import axios from "axios";
 export interface Post {
   id: string;
   title: string;
-  originalContent?: string;
+  originalContent: string;
   purifiedContent?: string;
   createdAt: string;
   updatedAt: string;
   tags?: { id: string; name: string }[];
+}
+export interface CreatePostDto {
+  title: string,
+  content: string,
+}
+
+export interface UpdatePostDto {
+  title?:string,
+  content?: string,
 }
 
 export interface UserInfo {
@@ -81,4 +90,25 @@ export const getMyPostById = async (id:string): Promise<Post> => {
     console.log('글 조회 에러',error)
     throw new Error('글 조회에서 에러 발생')
   }
+}
+
+export const createPost = async (postData: CreatePostDto):Promise<Post> => {
+  try {
+    const res = await apiClient.post('posts',postData);
+    return res.data;
+  } catch(error) {
+    console.log(error);
+    throw new Error('게시글 작성에서 오류가 발생하였습니다.');
+  }
+
+}
+
+export const updatePost = async (id:string ,postData: UpdatePostDto): Promise<Post> => {
+    try {
+      const res = await apiClient.patch(`posts/${id}`,postData);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      throw new Error('게시글 수정에서 오류가 발생하였습니다.');
+    }
 }

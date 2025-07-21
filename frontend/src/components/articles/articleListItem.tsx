@@ -1,7 +1,10 @@
-import { PostListItemDto } from "@/src/lib/api";
+import { Post } from "@/src/lib/api";
 import Link from "next/link";
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
-export default function ArticleItem({articleItem}:{articleItem:PostListItemDto}){
+
+export default function ArticleItem({articleItem}:{articleItem:Post}){
   const articleDetailUrl = `/posts/${articleItem.id}`
   return (
     <div>

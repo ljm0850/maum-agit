@@ -1,3 +1,4 @@
+// 사용 안하는 페이지
 'use client'
 
 import { useQuery } from "@tanstack/react-query";
