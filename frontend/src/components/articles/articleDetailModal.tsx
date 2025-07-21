@@ -22,10 +22,16 @@ export default function ArticleDetailModal({ isOpen, onClose, postId}: ArticleDe
     staleTime: 1000 * 60 * 5
   })
   
-  // if (!isOpen || !postId) return null;
-  // if (isLoading) return <div>로딩중입니다.</div>
-  // if (isError) return <div>에러가 발생했습니다. : {error?.message}</div>
-  // if (!post) return <div>게시글을 찾을 수 없습니다.</div>
+  if (!isOpen || !postId) return null;
+  if (isLoading) return null;
+  if (isError) {
+    alert(`에러가 발생했습니다. : ${error.message}`)
+    return null;
+  }
+  if (!post){
+    alert('게시글을 찾을 수 없습니다.')
+    return null;
+  }
 
   return (
     <div style={{
