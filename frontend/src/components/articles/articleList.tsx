@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getMyPostList, Post } from '@/src/lib/api';
-import ArticleItem from './articleListItem';
+// import ArticleItem from './articleListItem';
 import ArticleDetailModal from './articleDetailModal';
 // import { usePathname } from 'next/navigation';
+// import { useTempPostStore } from '@/src/stores/postStore';
+import ArticleFormModal from './articleFormModal';
 
 export default function ArticleList(){
   // 페이지네이션 파라미터
@@ -19,20 +21,27 @@ export default function ArticleList(){
     staleTime: 1000 * 60 * 5,
   })
 
-  // 게시글 디테일 모달
+  // 글 작성|수정 모달 관련
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const handleOpenCreateModal = () => { setIsFormModalOpen(true);};
+  const handleCloseFormModal = () => { setIsFormModalOpen(false);};
+  const handleEditRequestFromDetail = () => {
+    setIsDetailModalOpen(false); // 상세 모달 닫기
+    setIsFormModalOpen(true);    // 폼 모달 열기
+  };
+
+  // 게시글 디테일 모달 관련
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
-  const handleOpenDetailModal = (postId: string) => {
+  const handleOpenDetailModal = (postId:string) => {
     setSelectedPostId(postId);
     setIsDetailModalOpen(true);
   };
 
   const handleCloseDetailModal = () => {
-    setIsDetailModalOpen(false);
     setSelectedPostId(null);
+    setIsDetailModalOpen(false);
   };
-
-
 
   // 로딩중
   if (isLoading){
@@ -61,7 +70,6 @@ export default function ArticleList(){
       <h1>내 게시글 목록</h1>
       <div>
       {articles.map((article)=> (
-        // <ArticleItem key={article.id} articleItem={article}></ArticleItem>
         <div key={article.id}>
 
         <h2 
@@ -71,14 +79,21 @@ export default function ArticleList(){
               {article.title}
             </h2>
         </div>
+
       ))}
       </div>
-      
 
-
-      <ArticleDetailModal isOpen={isDetailModalOpen} 
+      <ArticleDetailModal
+        isOpen={isDetailModalOpen} 
         onClose={handleCloseDetailModal} 
-        postId={selectedPostId} />
+        postId={selectedPostId}
+        onEditRequest={handleEditRequestFromDetail}
+        />
+
+        <ArticleFormModal
+        isOpen={isFormModalOpen} 
+        onClose={handleCloseFormModal} 
+      />
     </div>
   )
 }

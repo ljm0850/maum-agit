@@ -11,12 +11,12 @@ export interface Post {
 }
 export interface CreatePostDto {
   title: string,
-  content: string,
+  originalContent: string,
 }
 
 export interface UpdatePostDto {
-  title?:string,
-  content?: string,
+  title:string,
+  originalContent: string,
 }
 
 export interface UserInfo {
@@ -85,7 +85,7 @@ export const getMyPostList = async (
 export const getMyPostById = async (id:string): Promise<Post> => {
   try {
     const res = await apiClient.get(`posts/${id}`)
-    return res.data
+    return res.data;
   } catch (error) {
     console.log('글 조회 에러',error)
     throw new Error('글 조회에서 에러 발생')
@@ -104,7 +104,8 @@ export const createPost = async (postData: CreatePostDto):Promise<Post> => {
 }
 
 export const updatePost = async (id:string ,postData: UpdatePostDto): Promise<Post> => {
-    try {
+  console.log("api.ts 에서 글 수정을 요청 받음 : ", id, postData);  
+  try {
       const res = await apiClient.patch(`posts/${id}`,postData);
       return res.data;
     } catch (error) {

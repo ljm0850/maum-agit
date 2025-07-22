@@ -1,17 +1,22 @@
 'use client';
 
-// import React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getMyPostById } from '@/src/lib/api';
 import { Post } from '@/src/lib/api';
+import { useTempPostStore } from '@/src/stores/postStore';
 
 interface ArticleDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   postId: string | null;
+  onEditRequest: () => void;
 }
 
-export default function ArticleDetailModal({ isOpen, onClose, postId}: ArticleDetailModalProps ){
+export default function ArticleDetailModal({ isOpen, onClose, postId, onEditRequest}: ArticleDetailModalProps ){
+  // 글 수정 
+  const { setSelectedPost, clearSelectedPost } = useTempPostStore(); 
+  
   const { data:post, isLoading, isError, error} = useQuery<Post>({
     queryKey: ['post', postId],
     queryFn: ()=>{
@@ -21,6 +26,11 @@ export default function ArticleDetailModal({ isOpen, onClose, postId}: ArticleDe
     enabled: !!postId&& isOpen, // postId가 있고 모달이 열리면 실행
     staleTime: 1000 * 60 * 5
   })
+  // React.useEffect(()=>{
+  //   if (!isOpen) {
+  //     clearSelectedPost();
+  //   }
+  // },[isOpen, clearSelectedPost])
   
   if (!isOpen || !postId) return null;
   if (isLoading) return null;
@@ -77,6 +87,28 @@ export default function ArticleDetailModal({ isOpen, onClose, postId}: ArticleDe
           <div dangerouslySetInnerHTML={{ __html: post.originalContent }} />
         </div>
       </div>
+      <button
+          onClick={() => {
+            if (post) { // 게시글 데이터가 있을 때만
+              setSelectedPost(post); // Zustand에 현재 Post 객체 저장
+            }
+            onClose(); // 상세 모달 닫기
+            onEditRequest(); // 부모에게 폼 모달 열기를 요청
+          }}
+          style={{
+            marginTop: '20px',
+            padding: '10px 20px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          수정하기
+        </button>
+
+
     </div>
   );
 }
