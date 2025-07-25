@@ -24,7 +24,6 @@ export default function ArticleList(){
   // 글 작성|수정 모달 관련
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const handleOpenCreateModal = () => { 
-    
     setIsFormModalOpen(true);
   };
   const handleCloseFormModal = () => { setIsFormModalOpen(false);};

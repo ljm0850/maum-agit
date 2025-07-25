@@ -70,6 +70,7 @@ export const getMyPostList = async (
     limit,
   };
   if (tag) params.tag = tag;
+  console.log("getMyPostList요청이 들어옴. <api.ts>")
   try {
     const res = await apiClient.get('posts', { params });
     return res.data;
@@ -112,4 +113,14 @@ export const updatePost = async (id:string ,postData: UpdatePostDto): Promise<Po
       console.log(error);
       throw new Error('게시글 수정에서 오류가 발생하였습니다.');
     }
+}
+
+export const deletePost = async (postId:string): Promise<void> => {
+  try {
+    const res = apiClient.delete(`posts/${postId}`);
+    console.log(res)
+  } catch (error) {
+    console.log(error);
+    throw new Error('게시글 삭제에서 오류가 발생하였습니다.')
+  }
 }

@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+// import React, { useEffect } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getMyPostById } from '@/src/lib/api';
-import { Post } from '@/src/lib/api';
+import { deletePost,Post } from '@/src/lib/api';
 import { useTempPostStore } from '@/src/stores/postStore';
 
 interface ArticleDetailModalProps {
@@ -14,6 +14,7 @@ interface ArticleDetailModalProps {
 }
 
 export default function ArticleDetailModal({ isOpen, onClose, postId, onEditRequest}: ArticleDetailModalProps ){
+  const queryClient = useQueryClient();
   // 글 수정 
   const { setSelectedPost, clearSelectedPost } = useTempPostStore(); 
   
@@ -26,12 +27,32 @@ export default function ArticleDetailModal({ isOpen, onClose, postId, onEditRequ
     enabled: !!postId&& isOpen, // postId가 있고 모달이 열리면 실행
     staleTime: 1000 * 60 * 5
   })
-  // React.useEffect(()=>{
-  //   if (!isOpen) {
-  //     clearSelectedPost();
-  //   }
-  // },[isOpen, clearSelectedPost])
   
+  // 글 삭제
+  const deletePostMutation = useMutation({
+    mutationFn: deletePost,
+    onSuccess: () => {
+      console.log("일단 삭제 됬어 ㅇㅇ")
+    },
+    onError: (error) => {
+      console.log("게시글 삭제 실패 : ",error);
+    }
+  })
+  const handleDelete = () => {
+    if (window.confirm('글을 삭제하시겠습니까?')){
+      if (post?.id) {
+        deletePostMutation.mutate(post.id,{ onSuccess: ()=>{
+          setTimeout(()=>{
+            queryClient.invalidateQueries({ queryKey: ['articles']})
+            onClose();
+          },50)
+        }, onError:(error)=>{
+          alert(`글 삭제에 실패했습니다. : ${error.message}`)
+        }});
+      }
+    }
+  }
+
   if (!isOpen || !postId) return null;
   if (isLoading) return null;
   if (isError) {
@@ -107,6 +128,7 @@ export default function ArticleDetailModal({ isOpen, onClose, postId, onEditRequ
         >
           수정하기
         </button>
+      <button onClick={handleDelete}>삭제하기</button>
 
 
     </div>
