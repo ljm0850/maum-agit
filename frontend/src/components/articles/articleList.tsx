@@ -23,7 +23,10 @@ export default function ArticleList(){
 
   // 글 작성|수정 모달 관련
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-  const handleOpenCreateModal = () => { setIsFormModalOpen(true);};
+  const handleOpenCreateModal = () => { 
+    
+    setIsFormModalOpen(true);
+  };
   const handleCloseFormModal = () => { setIsFormModalOpen(false);};
   const handleEditRequestFromDetail = () => {
     setIsDetailModalOpen(false); // 상세 모달 닫기
@@ -67,6 +70,7 @@ export default function ArticleList(){
 
   return (
     <div>
+      <button onClick={handleOpenCreateModal}> 글 작성 </button>
       <h1>내 게시글 목록</h1>
       <div>
       {articles.map((article)=> (

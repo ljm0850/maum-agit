@@ -53,7 +53,7 @@ export default function ArticleFormModal({ isOpen, onClose }: PostFormModalProps
   const createPostMutation = useMutation({
     mutationFn: createPost, 
     onSuccess: (newPost) => {
-      queryClient.invalidateQueries({ queryKey: ['myPosts'] }); 
+      queryClient.invalidateQueries({ queryKey: ['articles'] }); 
       queryClient.invalidateQueries({ queryKey: ['post', newPost.id] });
       clearTempPost();
       onClose(); 
