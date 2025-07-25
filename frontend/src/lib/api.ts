@@ -55,6 +55,7 @@ apiClient.interceptors.request.use(
   }
 );
 
+// 유저
 export const getMyInfo = async (): Promise<UserInfo> => {
   const res = await apiClient.get('users/me');
   return res.data;
@@ -83,6 +84,12 @@ export const getMyPostList = async (
   }
 }
 
+export const unregister = async() => {
+  const res = await apiClient.delete('users/me');
+  return res.data;
+} 
+
+// 게시글
 export const getMyPostById = async (id:string): Promise<Post> => {
   try {
     const res = await apiClient.get(`posts/${id}`)

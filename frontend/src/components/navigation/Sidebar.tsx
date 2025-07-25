@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { getMyInfo,UserInfo } from '@/src/lib/api';
 import LogoutButton from '../ui/LogoutBtn';
+import UnregisterButton from '../ui/UnregisterBtn';
 
 interface SidebarProps {
   isExpanded: boolean;
@@ -80,6 +81,7 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
         </li>
       </ul>
       <LogoutButton></LogoutButton>
+      <UnregisterButton></UnregisterButton>
     </nav>
   );
 }

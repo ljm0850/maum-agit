@@ -63,7 +63,14 @@ export default function ArticleList(){
   // 게시글이 없을 때
   if (!articles || articles.length === 0){
     return (
-      <div>아직 게시글이 없습니다.</div>
+      <div>
+        <div> 게시글이 없습니다.</div>
+        <button onClick={handleOpenCreateModal}> 글 작성 </button>
+        <ArticleFormModal
+        isOpen={isFormModalOpen} 
+        onClose={handleCloseFormModal} 
+      />
+        </div>
     )
   }
 
