@@ -9,13 +9,8 @@ export interface Post {
   updatedAt: string;
   tags?: { id: string; name: string }[];
 }
-export interface CreatePostDto {
+export interface PostFormDto {
   title: string,
-  originalContent: string,
-}
-
-export interface UpdatePostDto {
-  title:string,
   originalContent: string,
 }
 
@@ -61,6 +56,12 @@ export const getMyInfo = async (): Promise<UserInfo> => {
   return res.data;
 }
 
+export const unregister = async() => {
+  const res = await apiClient.delete('users/me');
+  return res.data;
+} 
+
+// 게시글
 export const getMyPostList = async (
   page: number=1,
   limit: number=10,
@@ -71,7 +72,6 @@ export const getMyPostList = async (
     limit,
   };
   if (tag) params.tag = tag;
-  console.log("getMyPostList요청이 들어옴. <api.ts>")
   try {
     const res = await apiClient.get('posts', { params });
     return res.data;
@@ -84,12 +84,6 @@ export const getMyPostList = async (
   }
 }
 
-export const unregister = async() => {
-  const res = await apiClient.delete('users/me');
-  return res.data;
-} 
-
-// 게시글
 export const getMyPostById = async (id:string): Promise<Post> => {
   try {
     const res = await apiClient.get(`posts/${id}`)
@@ -100,7 +94,7 @@ export const getMyPostById = async (id:string): Promise<Post> => {
   }
 }
 
-export const createPost = async (postData: CreatePostDto):Promise<Post> => {
+export const createPost = async (postData: PostFormDto):Promise<Post> => {
   try {
     const res = await apiClient.post('posts',postData);
     return res.data;
@@ -111,8 +105,7 @@ export const createPost = async (postData: CreatePostDto):Promise<Post> => {
 
 }
 
-export const updatePost = async (id:string ,postData: UpdatePostDto): Promise<Post> => {
-  console.log("api.ts 에서 글 수정을 요청 받음 : ", id, postData);  
+export const updatePost = async (id:string ,postData: PostFormDto): Promise<Post> => {
   try {
       const res = await apiClient.patch(`posts/${id}`,postData);
       return res.data;

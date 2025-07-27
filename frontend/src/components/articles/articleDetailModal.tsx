@@ -1,10 +1,9 @@
 'use client';
 
-// import React, { useEffect } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getMyPostById } from '@/src/lib/api';
-import { deletePost,Post } from '@/src/lib/api';
+import { useQueryClient } from '@tanstack/react-query';
 import { useTempPostStore } from '@/src/stores/postStore';
+import { useDeletePostMutation } from '@/src/hooks/postMutaions';
+import { usePostDetailQuery } from '@/src/hooks/postQueries';
 
 interface ArticleDetailModalProps {
   isOpen: boolean;
@@ -15,40 +14,23 @@ interface ArticleDetailModalProps {
 
 export default function ArticleDetailModal({ isOpen, onClose, postId, onEditRequest}: ArticleDetailModalProps ){
   const queryClient = useQueryClient();
-  // 글 수정 
+  // 글 작성|수정
   const { setSelectedPost, clearSelectedPost } = useTempPostStore(); 
   
-  const { data:post, isLoading, isError, error} = useQuery<Post>({
-    queryKey: ['post', postId],
-    queryFn: ()=>{
-      if (!postId) throw new Error("게시글 id가 필요합니다.");
-      return getMyPostById(postId);
-    },
-    enabled: !!postId&& isOpen, // postId가 있고 모달이 열리면 실행
-    staleTime: 1000 * 60 * 5
-  })
-  
-  // 글 삭제
-  const deletePostMutation = useMutation({
-    mutationFn: deletePost,
-    onSuccess: () => {
-      console.log("일단 삭제 됬어 ㅇㅇ")
-    },
-    onError: (error) => {
-      console.log("게시글 삭제 실패 : ",error);
-    }
-  })
-  const handleDelete = () => {
+  const { data:post, isLoading, isError, error } = usePostDetailQuery(postId,isOpen);
+  const { mutate:deletePost, isPending:isDeleting } = useDeletePostMutation();
+
+  const handleDeletePost = () => {
     if (window.confirm('글을 삭제하시겠습니까?')){
       if (post?.id) {
-        deletePostMutation.mutate(post.id,{ onSuccess: ()=>{
+        deletePost(post.id,{onSuccess:()=>{
           setTimeout(()=>{
-            queryClient.invalidateQueries({ queryKey: ['articles']})
+            queryClient.invalidateQueries({ queryKey: ['articles'] });
+            clearSelectedPost();
+            alert('글이 삭제되었습니다.');
             onClose();
           },50)
-        }, onError:(error)=>{
-          alert(`글 삭제에 실패했습니다. : ${error.message}`)
-        }});
+        }})
       }
     }
   }
@@ -128,9 +110,7 @@ export default function ArticleDetailModal({ isOpen, onClose, postId, onEditRequ
         >
           수정하기
         </button>
-      <button onClick={handleDelete}>삭제하기</button>
-
-
+      <button onClick={handleDeletePost}>삭제하기</button>
     </div>
   );
 }

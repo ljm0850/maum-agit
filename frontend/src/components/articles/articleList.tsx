@@ -1,13 +1,11 @@
 'use client'
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { getMyPostList, Post } from '@/src/lib/api';
-// import ArticleItem from './articleListItem';
+// import { useQuery } from '@tanstack/react-query';
+// import { getMyPostList, Post } from '@/src/lib/api';
 import ArticleDetailModal from './articleDetailModal';
-// import { usePathname } from 'next/navigation';
-// import { useTempPostStore } from '@/src/stores/postStore';
 import ArticleFormModal from './articleFormModal';
+import { useMyPostListQuery } from '@/src/hooks/postQueries';
 
 export default function ArticleList(){
   // 페이지네이션 파라미터
@@ -15,11 +13,7 @@ export default function ArticleList(){
   const limit = 10;
   const [currentTag, setCurrentTag] = useState<string | undefined>(undefined);
 
-  const { data: articles, isLoading, isError } = useQuery<Post[]>({
-    queryKey: ['articles', currentPage, limit, currentTag],
-    queryFn:()=>getMyPostList(currentPage, limit, currentTag),
-    staleTime: 1000 * 60 * 5,
-  })
+  const { data:articles, isLoading, isError, error} = useMyPostListQuery(currentPage,limit,currentTag);
 
   // 글 작성|수정 모달 관련
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -66,10 +60,6 @@ export default function ArticleList(){
       <div>
         <div> 게시글이 없습니다.</div>
         <button onClick={handleOpenCreateModal}> 글 작성 </button>
-        <ArticleFormModal
-        isOpen={isFormModalOpen} 
-        onClose={handleCloseFormModal} 
-      />
         </div>
     )
   }

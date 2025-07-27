@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createPost, updatePost, Post, CreatePostDto, UpdatePostDto } from '@/src/lib/api'; 
+import { PostFormDto } from '@/src/lib/api'; 
 import { useTempPostStore } from '@/src/stores/postStore'; 
+import { useCreatePostMutation, useUpdatePostMutation } from '@/src/hooks/postMutaions';
 
 interface PostFormModalProps {
   isOpen: boolean; 
@@ -11,7 +11,6 @@ interface PostFormModalProps {
 }
 
 export default function ArticleFormModal({ isOpen, onClose }: PostFormModalProps) {
-  const queryClient = useQueryClient();
   // 데이터
   const { 
     tempTitle, tempContent, setTempTitle, setTempContent, clearTempPost,  // 임시 데이터(글 쓰다 실수로 종료시)
@@ -23,80 +22,53 @@ export default function ArticleFormModal({ isOpen, onClose }: PostFormModalProps
   const [formContent, setFormContent] = useState('');
   
   const [isSubmitting, setIsSubmitting] = useState(false); // 글 작성|수정 후 버튼 막는 용도
-
   const isEditMode = !!selectedPost;  // 글 수정인지 체크용
   
   // (모달이 열릴 때|initialPost가 변경될 때) 폼 초기화
   useEffect(() => {
-    console.log("useEffect 실행됨. isOpen:", isOpen, "selectedPost:", selectedPost);
     if (isOpen) {
       if (selectedPost) { // 글 수정
-        console.log("글 수정 모드입니다 ㅇㅇ")
-        console.log(selectedPost)
         setFormTitle(selectedPost.title);
         setFormContent(selectedPost.originalContent);
-        console.log('Set form fields to:', selectedPost!.title, selectedPost!.originalContent);
       } else { // 글작성, 작성중인 데이터가 있으면 불러오기
         setFormTitle(tempTitle); 
         setFormContent(tempContent); 
-        console.log('Set form fields to (temp):', tempTitle, tempContent); // ✨ 추가 ✨
       }
     } else { // 모달이 닫힐 때 폼 초기화
         setFormTitle('');
         setFormContent('');
         clearSelectedPost();
-        console.log('Cleared form fields.'); // ✨ 추가 ✨
     }
   }, [isOpen, selectedPost, tempTitle, tempContent, setFormTitle, setFormContent, clearSelectedPost]);
 
-  // 글 생성 Mutation
-  const createPostMutation = useMutation({
-    mutationFn: createPost, 
-    onSuccess: (newPost) => {
-      queryClient.invalidateQueries({ queryKey: ['articles'] }); 
-      queryClient.invalidateQueries({ queryKey: ['post', newPost.id] });
-      clearTempPost();
-      onClose(); 
-      alert('게시글이 성공적으로 작성되었습니다!');
-    },
-    onError: (error) => {
-      console.error('게시글 생성 실패:', error);
-      alert(`게시글 생성 실패: ${error.message}`);
-    },
-    onSettled: () => {
-      setIsSubmitting(false); 
-    }
-  });
-
-  // 글 수정 Mutation
-  const updatePostMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpdatePostDto }) => updatePost(id, data), 
-    onSuccess: (updatedPost) => {
-      queryClient.invalidateQueries({ queryKey: ['articles'] }); 
-      queryClient.invalidateQueries({ queryKey: ['post', updatedPost.id] }); 
-      onClose();
-      alert('게시글이 성공적으로 수정되었습니다!');
-    },
-    onError: (error) => {
-      console.error('게시글 수정 실패:', error);
-      alert(`게시글 수정 실패: ${error.message}`);
-    },
-    onSettled: () => {
-      setIsSubmitting(false);
-    }
-  });
-
+  // 글 생성|수정 Mutation
+  // const { mutate: createPost, isPending: isCreating } = useCreatePostMutation();
+  const { mutate: createPost } = useCreatePostMutation();
+  const { mutate: updatePost } = useUpdatePostMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true); 
 
-    const postData: CreatePostDto = { title: formTitle, originalContent: formContent }; 
+    const postData: PostFormDto = { title: formTitle, originalContent: formContent }; 
 
     if (isEditMode) { // 글 수정모드면
-      updatePostMutation.mutate({ id: selectedPost.id, data: postData });
+      updatePost(
+        {postId: selectedPost.id, postData:postData},
+        { onSuccess:()=>{
+          clearSelectedPost();
+          onClose();
+          alert('글이 성공적으로 수정되었습니다.')
+      }})
     } else { // 없으면 생성 모드
-      createPostMutation.mutate(postData);
+      createPost(
+        postData,
+        { onSuccess: ()=>{
+          clearTempPost();
+          onClose();
+          alert('글이 성공적으로 작성되었습니다.');
+        }
+      })
     }
   };
 
