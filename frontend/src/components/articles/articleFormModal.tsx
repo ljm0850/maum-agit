@@ -58,7 +58,8 @@ export default function ArticleFormModal({ isOpen, onClose }: PostFormModalProps
         { onSuccess:()=>{
           clearSelectedPost();
           onClose();
-          alert('글이 성공적으로 수정되었습니다.')
+          setIsSubmitting(false);
+          alert('글이 성공적으로 수정되었습니다.');
       }})
     } else { // 없으면 생성 모드
       createPost(
@@ -66,6 +67,7 @@ export default function ArticleFormModal({ isOpen, onClose }: PostFormModalProps
         { onSuccess: ()=>{
           clearTempPost();
           onClose();
+          setIsSubmitting(false);
           alert('글이 성공적으로 작성되었습니다.');
         }
       })
