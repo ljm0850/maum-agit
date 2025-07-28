@@ -1,19 +1,14 @@
 'use client';
 
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+// import { useState } from 'react';
 import { useUserUnregister } from '@/src/hooks/userMutaions';
+import { useAuthStore } from '@/src/stores/authStore';
 
 export default function UnregisterButton() {
-  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
-  
-  useEffect(()=>{
-    setIsClient(true);
-  },[]);
-
-  const isLoggedIn = isClient && !!localStorage.getItem('accessToken');
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   
   const { mutate:userUnregist}  = useUserUnregister()
 

@@ -1,11 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-// import { useQuery } from '@tanstack/react-query';
-// import { getMyInfo,UserInfo } from '@/src/lib/api';
-import { useMyInfoQuery } from '@/src/hooks/userQueries';
 import LogoutButton from '../ui/LogoutBtn';
 import UnregisterButton from '../ui/UnregisterBtn';
+import { useAuthStore } from '@/src/stores/authStore';
 
 interface SidebarProps {
   isExpanded: boolean;
@@ -15,8 +13,8 @@ interface SidebarProps {
 
 export default function Sidebar({ isExpanded, onToggle, onHoverChange }: SidebarProps) {
   // 내 정보
-  const { data: userData } = useMyInfoQuery();
-
+  const userData = useAuthStore.getState().user;
+  
   return (
     <nav
       style={{

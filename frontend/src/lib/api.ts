@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useAuthStore } from "../stores/authStore";
 
 export interface Post {
   id: string;
@@ -39,13 +40,27 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken'); // localStorage에서 토큰 가져오기
+    // const token = localStorage.getItem('accessToken'); // localStorage에서 토큰 가져오기
+    const token = useAuthStore.getState().token;
+    // console.log("토큰 : ",  token)
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // 401 Unauthorized 시 로그아웃
+      const { logout } = useAuthStore.getState();
+      logout();
+    }
     return Promise.reject(error);
   }
 );

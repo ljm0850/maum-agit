@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import ClientLayout from './clientLayout';
+import QueryClientWrapper from '@/src/components/layout/QueryClientWrapper';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -15,9 +16,11 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <ClientLayout>
-          {children}
-        </ClientLayout>
+        <QueryClientWrapper>
+          <ClientLayout>
+            {children}
+          </ClientLayout>
+        </QueryClientWrapper>
       </body>
     </html>
   );
