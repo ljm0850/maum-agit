@@ -1,14 +1,20 @@
 import { Post } from "@/src/lib/api";
-import Link from "next/link";
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import Card from 'react-bootstrap/Card';
+import styles from "./articleListItem.module.css"
 
-
-export default function ArticleItem({articleItem}:{articleItem:Post}){
-  const articleDetailUrl = `/posts/${articleItem.id}`
+export default function ArticleItem({article}:{article:Post}){
   return (
     <div>
-      <Link href={articleDetailUrl}>글 제목:{articleItem.title}</Link>
+      <Card className={styles.articleItem}>
+      <Card.Body>
+        <Card.Title>{article.title}</Card.Title>
+        {/* <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
+        <Card.Link href="#">Card Link</Card.Link>
+        <Card.Link href="#">Another Link</Card.Link> */}
+      </Card.Body>
+    </Card>
+
+
     </div>
   )
 }

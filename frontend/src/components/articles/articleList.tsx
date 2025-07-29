@@ -6,6 +6,7 @@ import { useState } from 'react';
 import ArticleDetailModal from './articleDetailModal';
 import ArticleFormModal from './articleFormModal';
 import { useMyPostListQuery } from '@/src/hooks/postQueries';
+import ArticleItem from './articleListItem';
 
 export default function ArticleList(){
   // 페이지네이션 파라미터
@@ -70,14 +71,8 @@ export default function ArticleList(){
       <h1>내 게시글 목록</h1>
       <div>
       {articles.map((article)=> (
-        <div key={article.id}>
-
-        <h2 
-              onClick={() => handleOpenDetailModal(article.id)} // 클릭 시 해당 게시글 ID로 상세 모달 열기
-              style={{ fontSize: '1.5em', marginBottom: '10px', color: '#333', cursor: 'pointer' }} // 커서 포인터 추가
-              >
-              {article.title}
-            </h2>
+        <div key={article.id} onClick={()=>handleOpenDetailModal(article.id)}>
+        <ArticleItem article={article}/>
         </div>
 
       ))}
