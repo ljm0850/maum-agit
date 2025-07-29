@@ -1,12 +1,13 @@
 'use client'
 
 import { useState } from 'react';
-// import { useQuery } from '@tanstack/react-query';
-// import { getMyPostList, Post } from '@/src/lib/api';
 import ArticleDetailModal from './articleDetailModal';
 import ArticleFormModal from './articleFormModal';
 import { useMyPostListQuery } from '@/src/hooks/postQueries';
 import ArticleItem from './articleListItem';
+import Container from 'react-bootstrap/Container';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 
 export default function ArticleList(){
   // 페이지네이션 파라미터
@@ -67,16 +68,17 @@ export default function ArticleList(){
 
   return (
     <div>
-      <button onClick={handleOpenCreateModal}> 글 작성 </button>
       <h1>내 게시글 목록</h1>
-      <div>
+      <button onClick={handleOpenCreateModal}> 새 글 작성 </button>
+      <Container>
+        <Row>
       {articles.map((article)=> (
-        <div key={article.id} onClick={()=>handleOpenDetailModal(article.id)}>
-        <ArticleItem article={article}/>
-        </div>
-
-      ))}
-      </div>
+        <Col key={article.id} md={6} sm={12} onClick={()=>handleOpenDetailModal(article.id)}>
+          <ArticleItem article={article}/>
+        </Col>
+        ))}
+        </Row>
+      </Container>
 
       <ArticleDetailModal
         isOpen={isDetailModalOpen} 
