@@ -3,6 +3,7 @@ import ClientLayout from './clientLayout';
 import QueryClientWrapper from '@/src/components/layout/QueryClientWrapper';
 import './globals.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Script from 'next/script'; 
 
 export const metadata: Metadata = {
   title: '마음아지트',
@@ -17,6 +18,13 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
+        <Script
+          src="https://accounts.google.com/gsi/client"
+          async
+          defer
+          strategy="afterInteractive" // ✨ 이 부분을 추가해주세요. ✨
+        />
+
         <QueryClientWrapper>
           <ClientLayout>
             {children}

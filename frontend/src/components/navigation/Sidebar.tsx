@@ -38,7 +38,12 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
       <Navbar>
         <Container>
           {userData ? 
-          (<p><div><b>{userData.username}</b>님</div><div>안녕하세요.</div></p>)
+          (
+            <div>
+              <b>{userData.username} 님</b>
+              <div>안녕하세요.</div>
+            </div>
+          )
           :(<p>로그인이 필요합니다.</p>)}
         </Container>
       </Navbar>
