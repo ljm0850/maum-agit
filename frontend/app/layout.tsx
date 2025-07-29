@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import ClientLayout from './clientLayout';
 import QueryClientWrapper from '@/src/components/layout/QueryClientWrapper';
 import './globals.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export const metadata: Metadata = {
   title: '마음아지트',

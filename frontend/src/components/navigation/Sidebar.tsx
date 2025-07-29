@@ -1,9 +1,14 @@
 'use client';
 
-import Link from 'next/link';
+// import Link from 'next/link';
 import LogoutButton from '../ui/LogoutBtn';
 import UnregisterButton from '../ui/UnregisterBtn';
 import { useAuthStore } from '@/src/stores/authStore';
+
+// css
+import styles from './Sidebar.module.css';
+import Container from 'react-bootstrap/Container';
+import Navbar from 'react-bootstrap/Navbar';
 
 interface SidebarProps {
   isExpanded: boolean;
@@ -14,68 +19,77 @@ interface SidebarProps {
 export default function Sidebar({ isExpanded, onToggle, onHoverChange }: SidebarProps) {
   // 내 정보
   const userData = useAuthStore.getState().user;
+  const sidebarClasses = `${styles.sidebar} ${isExpanded ? styles.expanded : styles.collapsed}`;
   
   return (
-    <nav
-      style={{
-        width: isExpanded ? '200px' : '60px',
-        backgroundColor: '#2c3e50',
-        color: 'white',
-        padding: '15px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: isExpanded ? 'flex-start' : 'center',
-      }}
+      <nav
+      className={sidebarClasses}
       onMouseEnter={() => onHoverChange(true)} // 마우스 진입 시 확장
       onMouseLeave={() => onHoverChange(false)} // 마우스 이탈 시 축소
     >
-
-      <div onClick={onToggle} style={{ cursor: 'pointer', alignSelf: 'flex-end', marginBottom: '20px' }}>
-        <span>☰</span>
-      </div>
-
+      <Navbar>
+        <Container>
+          <span>☰</span>
+          {isExpanded && <Navbar.Brand href="/">마음 아지트</Navbar.Brand>}
+        </Container>
+      </Navbar>
+      {isExpanded && <div>
       {/* 로그인 정보 */}
-      {isExpanded &&
-      <div style={{padding: '20px', borderRadius: '8px' }}>
-      {userData ? (
-        <div style={{ lineHeight: '1.8' }}>
-          <p>{userData.username}님 안녕하세요.</p>
+      <Navbar>
+        <Container>
+          {userData ? 
+          (<p><div><b>{userData.username}</b>님</div><div>안녕하세요.</div></p>)
+          :(<p>로그인이 필요합니다.</p>)}
+        </Container>
+      </Navbar>
+      <br/>
+      
+      {/* 링크들 */}
+      {userData &&
+      <div>
+        <Navbar>
+          <Container>
+            <Navbar.Brand href='/posts'>
+                <span>게시물</span>
+            </Navbar.Brand>
+          </Container>
+        </Navbar>
+        <br />
+      </div>
+      }
+      
+      <Navbar>
+        <Container>
+          <Navbar.Brand href="https://github.com/ljm0850">
+            <span>github</span>
+          </Navbar.Brand>
+        </Container>
+      </Navbar>
+      <br />
+      
+      <Navbar>
+        <Container>
+          <Navbar.Brand href="https://ljm0850.tistory.com/">
+            <span>블로그</span>
+          </Navbar.Brand>
+        </Container>
+      </Navbar>
+      {/* 로그아웃 & 회원탈퇴 버튼 */}
+      {userData && <div>
+        <LogoutButton></LogoutButton>
+        <UnregisterButton></UnregisterButton>
         </div>
-      ) : (
-        <p>로그인이 필요합니다.</p>
-      )}
-        </div>}
-
-      {/* 내비게이션 아이템 목록 */}
-      <ul style={{ listStyle: 'none', padding: 0, width: '100%' }}>
-        <li>
-          <Link href="/posts" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'white' }}>
-            <span>🏠</span>
-            {isExpanded && <span>게시물</span>}
-          </Link>
-        </li>
-        <li>
-          {/* <Link href="/users" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'white' }}>
-            <span>👤</span>
-            {isExpanded && <span>사용자</span>}
-          </Link> */}
-        </li>
-        <li>
-          <Link href="https://github.com/ljm0850">
-            {isExpanded && <span>github</span>}
-          </Link>
-        </li>
-        <li>
-          <Link href="">
-          {isExpanded && <span>blog</span>}
-          </Link>
-        </li>
-        <li>
-          {isExpanded && <div>문의: dlwoals0850@gmail.com</div>}
-        </li>
-      </ul>
-      <LogoutButton></LogoutButton>
-      <UnregisterButton></UnregisterButton>
+        }
+      </div>
+      }
     </nav>
   );
 }
+
+{/* <Navbar className="bg-body-tertiary">
+        <Container>
+          <Navbar.Brand href="#home">
+            React Bootstrap
+          </Navbar.Brand>
+        </Container>
+      </Navbar> */}
