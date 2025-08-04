@@ -8,6 +8,9 @@ import ArticleItem from './articleListItem';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+
 
 export default function ArticleList(){
   // 페이지네이션 파라미터
@@ -91,6 +94,7 @@ export default function ArticleList(){
         isOpen={isFormModalOpen} 
         onClose={handleCloseFormModal} 
       />
+      
     </div>
   )
 }
