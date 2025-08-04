@@ -4,6 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { PostFormDto } from '@/src/lib/api'; 
 import { useTempPostStore } from '@/src/stores/postStore'; 
 import { useCreatePostMutation, useUpdatePostMutation } from '@/src/hooks/postMutaions';
+// css
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+
 
 interface PostFormModalProps {
   isOpen: boolean; 
@@ -77,51 +82,39 @@ export default function ArticleFormModal({ isOpen, onClose }: PostFormModalProps
   if (!isOpen) return null; 
 
   return (
-    <div>
-      <div>
-        <button onClick={onClose}>&times;</button>
-        <h2 style={{ marginBottom: '20px', textAlign: 'center' }}>
-          {isEditMode ? '게시글 수정' : '새 게시글 작성'}
-        </h2>
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '15px' }}>
-            <label htmlFor="title">제목</label>
-            <input
-              type="text"
-              id="title"
-              value={formTitle}
-              onChange={(e) => {
+      <Modal show={isOpen} onHide={onClose} backdrop="static">
+      <Modal.Header closeButton onClick={onClose}>
+        <Modal.Title>{isEditMode ? '게시글 수정' : '새 게시글 작성'}</Modal.Title>
+      </Modal.Header>
+      <Form>
+      <Modal.Body>
+        <Form.Group className="mb-3" controlId="formTitle">
+          <Form.Label>제목</Form.Label>
+          <Form.Control placeholder="제목을 입력해 주세요" value={formTitle} required onChange={(e) => {
                 setFormTitle(e.target.value); 
                 if (!isEditMode) { // 생성 모드일 때만 임시 저장
                     setTempTitle(e.target.value);
                 } 
-              }}
-              required
-            />
-          </div>
-          <div style={{ marginBottom: '20px' }}>
-            <label htmlFor="content">내용</label>
-            <textarea
-              id="content"
-              value={formContent} 
-              onChange={(e) => {
+              }}/>
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formContents">
+        <Form.Label>본문</Form.Label>
+        <Form.Control as="textarea" rows={5} value={formContent} required onChange={(e) => {
                 setFormContent(e.target.value); 
                 if (!isEditMode) { // 생성 모드일 때만 Zustand에 임시 저장
                     setTempContent(e.target.value);
                 }
-              }}
-              required
-              rows={10}
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={isSubmitting} 
-          >
-            {isSubmitting ? '저장 중...' : (isEditMode ? '수정하기' : '작성하기')}
-          </button>
-        </form>
-      </div>
-    </div>
+              }} />
+        </Form.Group>
+
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="primary" type="submit" onClick={handleSubmit} disabled={isSubmitting} >
+          {isSubmitting ? '저장 중...' : (isEditMode ? '수정하기' : '작성하기')}
+        </Button>
+      </Modal.Footer>
+      </Form>
+    </Modal>
   );
 }

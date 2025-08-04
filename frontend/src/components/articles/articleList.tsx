@@ -9,8 +9,6 @@ import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-
 
 export default function ArticleList(){
   // 페이지네이션 파라미터
@@ -71,9 +69,8 @@ export default function ArticleList(){
 
   return (
     <div>
-      <h1>내 게시글 목록</h1>
-      <button onClick={handleOpenCreateModal}> 새 글 작성 </button>
       <Container>
+      <h1>내 게시글 목록</h1>
         <Row>
       {articles.map((article)=> (
         <Col key={article.id} md={6} sm={12} onClick={()=>handleOpenDetailModal(article.id)}>
@@ -81,6 +78,7 @@ export default function ArticleList(){
         </Col>
         ))}
         </Row>
+      <Button variant="info" onClick={handleOpenCreateModal}>새 글 작성</Button>
       </Container>
 
       <ArticleDetailModal
