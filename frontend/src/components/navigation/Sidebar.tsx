@@ -42,6 +42,11 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
             <div>
               <b>{userData.username} 님</b>
               <div>안녕하세요.</div>
+              <br />
+              <Navbar.Brand href='/user/profile'>
+                <span>내 정보</span>
+              </Navbar.Brand>
+
             </div>
           )
           :(<p>로그인이 필요합니다.</p>)}
@@ -80,10 +85,9 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
           </Navbar.Brand>
         </Container>
       </Navbar>
-      {/* 로그아웃 & 회원탈퇴 버튼 */}
+      {/* 로그아웃 버튼 */}
       {userData && <div>
         <LogoutButton></LogoutButton>
-        <UnregisterButton></UnregisterButton>
         </div>
         }
       </div>
@@ -91,11 +95,3 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
     </nav>
   );
 }
-
-{/* <Navbar className="bg-body-tertiary">
-        <Container>
-          <Navbar.Brand href="#home">
-            React Bootstrap
-          </Navbar.Brand>
-        </Container>
-      </Navbar> */}
