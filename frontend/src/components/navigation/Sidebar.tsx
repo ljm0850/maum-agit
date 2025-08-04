@@ -49,7 +49,7 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
       </Navbar>
       <br/>
       
-      {/* 링크들 */}
+      {/* 내부 링크들 */}
       {userData &&
       <div>
         <Navbar>
@@ -62,7 +62,8 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
         <br />
       </div>
       }
-      
+      <hr></hr>
+      {/* 외부 링크 */}
       <Navbar>
         <Container>
           <Navbar.Brand href="https://github.com/ljm0850">

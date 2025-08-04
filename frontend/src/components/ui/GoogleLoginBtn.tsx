@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/src/stores/authStore';
 
 interface GoogleLoginButtonProps {
   backendAuthUrl: string;
@@ -11,6 +12,7 @@ export default function GoogleLoginButton({ backendAuthUrl }: GoogleLoginButtonP
   const router = useRouter();
   const googleButtonRef = useRef<HTMLDivElement>(null);
   const [isGoogleApiReady, setIsGoogleApiReady] = useState(false);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   useEffect(() => {
     const checkGoogleApi = setInterval(() => {
@@ -54,6 +56,7 @@ export default function GoogleLoginButton({ backendAuthUrl }: GoogleLoginButtonP
     }
   }, [isGoogleApiReady, router, backendAuthUrl]); // isGoogleApiReady가 변경될 때마다 재실행
 
+  if (isLoggedIn) return null
   return (
     <div className="flex flex-col items-center justify-center p-4">
       <div ref={googleButtonRef} className="my-4">
