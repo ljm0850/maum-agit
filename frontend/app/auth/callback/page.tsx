@@ -13,6 +13,7 @@ export default function LoginCallbackPage(){
   const [isLoading, setIsLoading] = useState(true);
   const [errMessage, setErrMessage] = useState<string|null>(null);
 
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const login = useAuthStore((state)=> state.login);
   const logout = useAuthStore((state)=> state.logout);
   const setToken = useAuthStore((state)=>state.setToken);
@@ -32,7 +33,7 @@ export default function LoginCallbackPage(){
         const userInfo: UserInfo = await getMyInfo(); // 유저 정보 가져오기
         login(accessToken, userInfo); // Zustand의 login
         queryClient.setQueryData(['user', 'me'], userInfo); 
-        router.replace('/posts'); // posts로 리다이렉트
+        // router.replace('/posts'); // posts로 리다이렉트
       } catch (error) {
         console.error("유저 정보를 가져오는 중 에러 발생:", error);
         setErrMessage('죄송합니다. 유저 정보를 가져오지 못했습니다.');
@@ -43,6 +44,11 @@ export default function LoginCallbackPage(){
     }
     checkAccessToken();
   })
+  useEffect(()=> {
+    if (isLoggedIn) router.replace('/posts')
+  },[isLoggedIn]
+  )
+
   if (errMessage) {
     return (
       <div>
