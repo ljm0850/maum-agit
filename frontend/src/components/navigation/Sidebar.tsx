@@ -29,8 +29,8 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
     >
       <Navbar>
         <Container>
-          <span>☰</span>
-          {isExpanded && <Navbar.Brand href="/">마음 아지트</Navbar.Brand>}
+          {!isExpanded &&<span>☰</span>}
+          {isExpanded && <Navbar.Brand href="/"><h4>마음 아지트</h4></Navbar.Brand>}
         </Container>
       </Navbar>
       {isExpanded && <div>
@@ -49,7 +49,7 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
 
             </div>
           )
-          :(<p>로그인이 필요합니다.</p>)}
+          :(<Navbar.Brand href='/auth/login' color='red'>로그인</Navbar.Brand>)}
         </Container>
       </Navbar>
       <br/>
@@ -71,17 +71,22 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
       {/* 외부 링크 */}
       <Navbar>
         <Container>
+          <h4>외부 링크</h4>
+        </Container>
+      </Navbar>
+      
+      <Navbar>
+        <Container>
           <Navbar.Brand href="https://github.com/ljm0850">
-            <span>github</span>
+            <span>🖊️github</span>
           </Navbar.Brand>
         </Container>
       </Navbar>
-      <br />
       
       <Navbar>
         <Container>
           <Navbar.Brand href="https://ljm0850.tistory.com/">
-            <span>블로그</span>
+            <span>📚블로그</span>
           </Navbar.Brand>
         </Container>
       </Navbar>

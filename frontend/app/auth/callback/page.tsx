@@ -35,7 +35,7 @@ export default function LoginCallbackPage(){
         if (userInfo.id) {
           login(accessToken, userInfo); // Zustand의 login
           queryClient.setQueryData(['user', 'me'], userInfo); 
-          router.replace('/posts'); // posts로 리다이렉트
+          router.replace('/'); // home으로 리다이렉트
         } else {
           logout();
         }
