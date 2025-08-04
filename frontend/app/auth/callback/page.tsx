@@ -19,6 +19,7 @@ export default function LoginCallbackPage(){
   const setToken = useAuthStore((state)=>state.setToken);
 
   useEffect(()=>{
+    if (isLoggedIn) return
     const checkAccessToken = async () =>{
       setIsLoading(true);
       const accessToken = searchParams.get('accessToken');
@@ -31,9 +32,13 @@ export default function LoginCallbackPage(){
       try {
         setToken(accessToken); // 임시로 저장
         const userInfo: UserInfo = await getMyInfo(); // 유저 정보 가져오기
-        login(accessToken, userInfo); // Zustand의 login
-        queryClient.setQueryData(['user', 'me'], userInfo); 
-        // router.replace('/posts'); // posts로 리다이렉트
+        if (userInfo.id) {
+          login(accessToken, userInfo); // Zustand의 login
+          queryClient.setQueryData(['user', 'me'], userInfo); 
+          router.replace('/posts'); // posts로 리다이렉트
+        } else {
+          logout();
+        }
       } catch (error) {
         console.error("유저 정보를 가져오는 중 에러 발생:", error);
         setErrMessage('죄송합니다. 유저 정보를 가져오지 못했습니다.');
@@ -44,10 +49,11 @@ export default function LoginCallbackPage(){
     }
     checkAccessToken();
   })
-  useEffect(()=> {
-    if (isLoggedIn) router.replace('/posts')
-  },[isLoggedIn]
-  )
+
+  // useEffect(()=> {
+  //   if (isLoggedIn) router.replace('/posts')
+  // },[isLoggedIn]
+  // )
 
   if (errMessage) {
     return (

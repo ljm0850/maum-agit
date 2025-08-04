@@ -18,21 +18,19 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const isHydrated = useAuthStore((state) => state._has ? true : false);
 
   useEffect(() => {
-    const pathSegments = pathname.split('/').filter(Boolean);
-    const PROTECTED_ROUTES_SEGMENTS = ['posts'];
-    const isProtectedRoute = PROTECTED_ROUTES_SEGMENTS.some(segment => pathSegments.includes(segment));
-    
+    console.log("client layout에서 useEffect 작동")
     if (!isHydrated) {
       return; // 하이드레이션이 완료될 때까지 함수 실행을 중단합니다.
     }
-
+    const pathSegments = pathname.split('/').filter(Boolean);
+    const PROTECTED_ROUTES_SEGMENTS = ['posts'];
+    const isProtectedRoute = PROTECTED_ROUTES_SEGMENTS.some(segment => pathSegments.includes(segment));
     // 로그인 없이 접근시
     if (!isLoggedIn && isProtectedRoute) {
       alert('로그인이 필요한 서비스입니다.');
       router.replace('/');
       return;
     }
-
   }, [isLoggedIn, pathname, router]);
 
   return (
