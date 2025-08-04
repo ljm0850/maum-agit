@@ -1,10 +1,10 @@
 'use client'; // 클라이언트 컴포넌트임을 명시
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
 import { useAuthStore } from '@/src/stores/authStore';
+// css
+import Button from 'react-bootstrap/Button';
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function LogoutButton() {
   if (isLoggedIn){
     return (
       <div>
-        <button onClick={handleLogout}>로그아웃</button>
+        <Button onClick={handleLogout} variant="outline-dark">로그아웃</Button>
       </div>
     )
   }

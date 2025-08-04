@@ -74,8 +74,8 @@ export default function ArticleDetailModal({ isOpen, onClose, postId, onEditRequ
       <Modal.Footer>
         <p>작성일: {new Date(post.createdAt).toLocaleDateString('ko-KR')}</p>
         <hr />
-        <Button variant="secondary" onClick={handleDeletePost}>글 삭제</Button>
-        <Button variant="primary" onClick={handleUpdatePost}>글 수정</Button>
+        <Button variant="outline-danger" onClick={handleDeletePost}>글 삭제</Button>
+        <Button variant="outline-primary" onClick={handleUpdatePost}>글 수정</Button>
       </Modal.Footer>
     </Modal>
   );

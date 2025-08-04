@@ -110,7 +110,7 @@ export default function ArticleFormModal({ isOpen, onClose }: PostFormModalProps
 
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="primary" type="submit" onClick={handleSubmit} disabled={isSubmitting} >
+        <Button variant="outline-primary" type="submit" onClick={handleSubmit} disabled={isSubmitting} >
           {isSubmitting ? '저장 중...' : (isEditMode ? '수정하기' : '작성하기')}
         </Button>
       </Modal.Footer>

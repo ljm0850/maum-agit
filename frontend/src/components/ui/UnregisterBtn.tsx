@@ -1,10 +1,10 @@
 'use client';
 
-// import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-// import { useState } from 'react';
 import { useUserUnregister } from '@/src/hooks/userMutaions';
 import { useAuthStore } from '@/src/stores/authStore';
+// css
+import Button from 'react-bootstrap/Button';
 
 export default function UnregisterButton() {
   const router = useRouter();
@@ -22,7 +22,7 @@ export default function UnregisterButton() {
   if (isLoggedIn){
     return (
       <div>
-        <button onClick={handleUnregister}>회원탈퇴</button>
+        <Button onClick={handleUnregister} variant="outline-warning">회원탈퇴</Button>
       </div>
     )
   }
