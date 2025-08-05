@@ -25,12 +25,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     const pathSegments = pathname.split('/').filter(Boolean);
     const PROTECTED_ROUTES_SEGMENTS = ['posts'];
     const isProtectedRoute = PROTECTED_ROUTES_SEGMENTS.some(segment => pathSegments.includes(segment));
+    
     // 로그인 없이 접근시
     if (!isLoggedIn && isProtectedRoute) {
       alert('로그인이 필요한 서비스입니다.');
       router.replace('/');
       return;
     }
+
   }, [isLoggedIn, pathname, router]);
 
   return (
@@ -40,7 +42,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         onToggle={toggleSidebar} 
         onHoverChange={handleHoverChange} 
       />
-      <main style={{ marginLeft: isSidebarExpanded ? '200px' : '60px', transition: 'margin-left 0.3s ease' }}>{children}</main>
+      {/* <main style={{ marginLeft: isSidebarExpanded ? '200px' : '60px', transition: 'margin-left 0.3s ease' }}>{children}</main> */}
+      <main style={{ transition: 'margin-left 0.3s ease' }}>{children}</main>
     </div>
   );
 }
