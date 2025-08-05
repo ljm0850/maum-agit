@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/naviggation';
 import { useAuthStore } from '@/src/stores/authStore';
 
 interface GoogleLoginButtonProps {
@@ -9,7 +9,7 @@ interface GoogleLoginButtonProps {
 }
 
 export default function GoogleLoginButton({ backendAuthUrl }: GoogleLoginButtonProps) {
-  const router = useRouter();
+  // const router = useRouter();
   const googleButtonRef = useRef<HTMLDivElement>(null);
   const [isGoogleApiReady, setIsGoogleApiReady] = useState(false);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -47,14 +47,15 @@ export default function GoogleLoginButton({ backendAuthUrl }: GoogleLoginButtonP
         },
         () => {
           console.log("Google button clicked, redirecting to backend auth URL:", backendAuthUrl);
-          router.push(backendAuthUrl);
+          // router.push(backendAuthUrl);
+          window.location.href = backendAuthUrl;
         }
       );
       console.log("Google button render function called.");
     } else if (isGoogleApiReady && !googleButtonRef.current) {
         console.log("Google API ready, but button ref not current.");
     }
-  }, [isGoogleApiReady, router, backendAuthUrl]); // isGoogleApiReady가 변경될 때마다 재실행
+  }, [isGoogleApiReady, backendAuthUrl]); // isGoogleApiReady가 변경될 때마다 재실행
 
   if (isLoggedIn) return null
   return (
