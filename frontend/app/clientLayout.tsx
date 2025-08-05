@@ -19,6 +19,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     console.log("client layout에서 useEffect 작동")
+    console.log("현주소가 로그인 페이지임? : ",pathname==='/auth/login')
     if (!isHydrated) {
       return; // 하이드레이션이 완료될 때까지 함수 실행을 중단합니다.
     }
@@ -42,8 +43,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         onToggle={toggleSidebar} 
         onHoverChange={handleHoverChange} 
       />
-      {/* <main style={{ marginLeft: isSidebarExpanded ? '200px' : '60px', transition: 'margin-left 0.3s ease' }}>{children}</main> */}
-      <main style={{ transition: 'margin-left 0.3s ease' }}>{children}</main>
+      <main style={{ marginLeft: pathname === '/auth/login'?'0px': isSidebarExpanded ? '200px' : '60px', transition: 'margin-left 0.3s ease' }}>{children}</main>
     </div>
   );
 }
