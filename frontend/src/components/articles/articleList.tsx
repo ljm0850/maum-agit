@@ -1,22 +1,26 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ArticleDetailModal from './articleDetailModal';
 import ArticleFormModal from './articleFormModal';
-import { useMyPostListQuery } from '@/src/hooks/postQueries';
+import { useMyPostInfiniteQuery } from '@/src/hooks/postQueries';
 import ArticleItem from './articleListItem';
+// css
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
+import Carousel from 'react-bootstrap/Carousel';
 
 export default function ArticleList(){
   // 페이지네이션 파라미터
   const [currentPage, setCurrentPage] = useState(1);
-  const limit = 10;
+  const limit = 4;
   const [currentTag, setCurrentTag] = useState<string | undefined>(undefined);
 
-  const { data:articles, isLoading, isError, error} = useMyPostListQuery(currentPage,limit,currentTag);
+  const lastElementRef = useRef(null);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError,} = useMyPostInfiniteQuery(limit,currentTag);
+  const articles = data?.pages.flatMap(page => page) || [];
 
   // 글 작성|수정 모달 관련
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -41,6 +45,34 @@ export default function ArticleList(){
     setSelectedPostId(null);
     setIsDetailModalOpen(false);
   };
+
+  useEffect(() => {
+    if (isFetchingNextPage) return;
+    if (!lastElementRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && hasNextPage) {
+          fetchNextPage();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1,
+      }
+    );
+    const currentElement = lastElementRef.current;
+    if (currentElement) {
+      observer.observe(currentElement);
+    }
+
+    return () => {
+      if (currentElement) {
+        observer.unobserve(currentElement);
+      }
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   // 로딩중
   if (isLoading){
@@ -70,15 +102,24 @@ export default function ArticleList(){
   return (
     <div>
       <Container>
+      <Button variant="outline-success" onClick={handleOpenCreateModal}>새 글 작성</Button>
       <h1>내 게시글 목록</h1>
         <Row>
-      {articles.map((article)=> (
-        <Col key={article.id} md={6} sm={12} onClick={()=>handleOpenDetailModal(article.id)}>
-          <ArticleItem article={article}/>
-        </Col>
-        ))}
+          {articles.map((article, index) => {
+            const isLastElement = index === articles.length - 1;
+            return (
+              <Col key={article.id} md={6} sm={12} className="mb-4">
+                <div
+                  onClick={() => handleOpenDetailModal(article.id)}
+                  style={{ cursor: 'pointer' }}
+                  ref={isLastElement ? lastElementRef : null}
+                >
+                  <ArticleItem article={article} />
+                </div>
+              </Col>
+            );
+          })}
         </Row>
-      <Button variant="outline-success" onClick={handleOpenCreateModal}>새 글 작성</Button>
       </Container>
 
       <ArticleDetailModal

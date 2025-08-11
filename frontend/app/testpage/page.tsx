@@ -1,32 +1,43 @@
-import { CounterDisplay } from "@/src/components/testComponent/CounterDisplay";
-import UserInfoComponent from '@/src/components/testComponent/UserInfoComponent';
-// 가상의 API 호출
-const queryTest = async (delay: number = 1000) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ message: 'Hello from React Query!', timestamp: new Date().toLocaleTimeString() });
-    }, delay);
-  });
-};
+'use client'
 
-export default async function TestPage() {
+import Carousel from 'react-bootstrap/Carousel';
+import { useState } from 'react';
 
-  // React Query
-  const data = await queryTest(); 
+export default function TestPage() {
+  const [index, setIndex] = useState(0);
+
+  const handleSelect = (selectedIndex) => {
+    setIndex(selectedIndex);
+  };
 
   return (
-    <div>
-      <hr/>
-      <UserInfoComponent />
-      <CounterDisplay />
-      <hr style={{ margin: '20px 0', border: 'none', borderTop: '1px dashed #ccc' }} />
-
-      <h2>React Query 데이터 페칭 테스트 (서버 상태 - 직접 fetch)</h2>
-      <p>메시지: <strong style={{ color: '#007bff' }}>{data?.message}</strong></p>
-      <p>데이터 가져온 시간: <strong style={{ color: '#28a745' }}>{data?.timestamp}</strong></p>
-      <p style={{ fontSize: '0.8em', color: '#666', marginTop: '5px' }}>
-        (이 데이터는 서버에서 미리 가져왔습니다.)
-      </p>
-    </div>
-  );
+    <Carousel fade>
+      <Carousel.Item>
+        {/* <ExampleCarouselImage text="First slide" /> */}
+        <div>1</div>
+        <Carousel.Caption>
+          <h3>First slide label</h3>
+          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item>
+        {/* <ExampleCarouselImage text="Second slide" /> */}
+        <div>2</div>
+        <Carousel.Caption>
+          <h3>Second slide label</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item>
+        {/* <ExampleCarouselImage text="Third slide" /> */}
+        <div>3</div>
+        <Carousel.Caption>
+          <h3>Third slide label</h3>
+          <p>
+            Praesent commodo cursus magna, vel scelerisque nisl consectetur.
+          </p>
+        </Carousel.Caption>
+      </Carousel.Item>
+    </Carousel>
+  )
 }
