@@ -33,7 +33,7 @@ export default function IntroducePage() {
           </Container>
         </Card>
       </Tab>
-      <Tab eventKey="navigation" title="네비게이션 기능">
+      <Tab eventKey="navigation" title="네비게이션">
         <Card border='success'>
           <Container>
             <details>

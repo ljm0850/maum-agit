@@ -39,18 +39,20 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
         </Container>
       </Navbar>
       {isExpanded && <div>
-      {/* 내부 링크들 */}
+      {/* 로그인시 */}
       {userData?
       <div>
         <Navbar>
           <Container>
             <Row>
-              <Navbar.Brand href='/user/profile'>
-                  <span className={isActive('/user/profile')? selectedLinkClasses:''}>내 정보</span>
-              </Navbar.Brand>
+              {/* <Navbar.Brand href='/user/profile'> */}
               <Navbar.Brand href='/posts'>
                   <span className={isActive('/posts') ? selectedLinkClasses:''}>게시물</span>
               </Navbar.Brand>
+              <br />
+              <Navbar.Brand><Nav.Link href='/user/profile' disabled>
+                  <span className={isActive('/user/profile')? selectedLinkClasses:''} style={{color:'#808080'}}>내 정보</span>
+              </Nav.Link></Navbar.Brand>
             </Row>
           </Container>
         </Navbar>
@@ -65,14 +67,14 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
         <br />
         {/* 버튼들 */}
       <Container>
-        <Row>
-          <LogoutButton></LogoutButton>
-          <UnregisterButton></UnregisterButton>
-        </Row>
+        <LogoutButton />
+        <br />
+        <UnregisterButton />
       </Container>
       <br/>
       </div>
       :
+      // 비로그인시
       <Container>
         <Navbar>
           <Navbar.Brand href='/auth/login'>

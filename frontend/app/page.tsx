@@ -3,7 +3,7 @@ export default function HomePage() {
   
   return (
     <div>
-      <h1>마음 아지트 프로젝트</h1>
+      <h1>프로젝트 소개</h1>
       <IntroducePage />
     </div>
   );
