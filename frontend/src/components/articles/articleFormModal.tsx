@@ -52,6 +52,10 @@ export default function ArticleFormModal({ isOpen, onClose }: PostFormModalProps
   const { mutate: updatePost } = useUpdatePostMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
+    if ( formTitle == '' || formContent =='' ){
+      return
+    }
+
     e.preventDefault();
     setIsSubmitting(true); 
 
@@ -100,12 +104,12 @@ export default function ArticleFormModal({ isOpen, onClose }: PostFormModalProps
 
         <Form.Group className="mb-3" controlId="formContents">
         <Form.Label>본문</Form.Label>
-        <Form.Control as="textarea" rows={5} value={formContent} required onChange={(e) => {
-                setFormContent(e.target.value); 
-                if (!isEditMode) { // 생성 모드일 때만 Zustand에 임시 저장
-                    setTempContent(e.target.value);
-                }
-              }} />
+        <Form.Control as="textarea" placeholder='본문을 입력해 주세요' rows={5} value={formContent} required onChange={(e) => {
+            setFormContent(e.target.value); 
+            if (!isEditMode) { // 생성 모드일 때만 Zustand에 임시 저장
+                setTempContent(e.target.value);
+            }
+          }} />
         </Form.Group>
 
       </Modal.Body>

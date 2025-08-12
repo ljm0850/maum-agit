@@ -22,7 +22,7 @@ export default function RootLayout({
           src="https://accounts.google.com/gsi/client"
           async
           defer
-          strategy="afterInteractive" // ✨ 이 부분을 추가해주세요. ✨
+          strategy="afterInteractive"
         />
 
         <QueryClientWrapper>
