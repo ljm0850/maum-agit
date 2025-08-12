@@ -102,8 +102,14 @@ export default function ArticleList(){
   return (
     <div>
       <Container>
-      <Button variant="outline-success" onClick={handleOpenCreateModal}>새 글 작성</Button>
-      <h1>내 게시글 목록</h1>
+        <Row>
+          <Col>
+            <h1>내 게시글 목록</h1>
+          </Col>
+          <Col>
+            <Button variant="outline-success" onClick={handleOpenCreateModal}>새 글 작성</Button>
+          </Col>
+        </Row>
         <Row>
           {articles.map((article, index) => {
             const isLastElement = index === articles.length - 1;

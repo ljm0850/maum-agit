@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Sidebar from '@/src/components/navigation/Sidebar';
 import { useAuthStore } from '@/src/stores/authStore';
+import { useUiStore } from '@/src/stores/uiStore';
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   // 사이드바 확장/축소 상태 관리
@@ -13,9 +14,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   
   // 현재 경로 파악
   const router = useRouter();
-  const pathname = usePathname(); // 현재 URL 경로 ('/posts')
+  const pathname = usePathname(); // 현재 URL 경로 (ex: '/posts')
+  const setPath = useUiStore((state)=> state.setPath);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const isHydrated = useAuthStore((state) => state._has ? true : false);
+
+  useEffect(() => {
+    setPath(pathname);
+  }, [pathname, setPath]);
 
   useEffect(() => {
     console.log("client layout에서 useEffect 작동")
