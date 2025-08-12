@@ -22,7 +22,7 @@ export default function UnregisterButton() {
   if (isLoggedIn){
     return (
       <div>
-        <Button onClick={handleUnregister} variant="outline-warning">회원탈퇴</Button>
+        <Button onClick={handleUnregister} variant="outline-secondary">회원탈퇴</Button>
       </div>
     )
   }

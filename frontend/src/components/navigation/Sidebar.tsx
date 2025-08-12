@@ -4,11 +4,13 @@
 import LogoutButton from '../ui/LogoutBtn';
 import UnregisterButton from '../ui/UnregisterBtn';
 import { useAuthStore } from '@/src/stores/authStore';
-
+import { useUiStore } from '@/src/stores/uiStore';
 // css
 import styles from './Sidebar.module.css';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import { Row } from 'react-bootstrap';
 
 interface SidebarProps {
   isExpanded: boolean;
@@ -20,7 +22,10 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
   // 내 정보
   const userData = useAuthStore.getState().user;
   const sidebarClasses = `${styles.sidebar} ${isExpanded ? styles.expanded : styles.collapsed}`;
-  
+  const selectedLinkClasses = `${styles.active}`
+  // store
+  const { currentPath } = useUiStore();
+  const isActive = (path: string) => currentPath.startsWith(path);
   return (
       <nav
       className={sidebarClasses}
@@ -30,42 +35,51 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
       <Navbar>
         <Container>
           {!isExpanded &&<span>☰</span>}
-          {isExpanded && <Navbar.Brand href="/"><h4>마음 아지트</h4></Navbar.Brand>}
+          {isExpanded && <Navbar.Brand href="/" ><h4 className={currentPath==='/'?selectedLinkClasses:''}>마음 아지트</h4></Navbar.Brand>}
         </Container>
       </Navbar>
       {isExpanded && <div>
-      {/* 로그인 정보 */}
-      <Navbar>
-        <Container>
-          {userData ? 
-          (
-            <div>
-              <b>{userData.username} 님</b>
-              <div>안녕하세요.</div>
-              <br />
-              <Navbar.Brand href='/user/profile'>
-                <span>내 정보</span>
-              </Navbar.Brand>
-
-            </div>
-          )
-          :(<Navbar.Brand href='/auth/login' color='red'>로그인</Navbar.Brand>)}
-        </Container>
-      </Navbar>
-      <br/>
-      
       {/* 내부 링크들 */}
-      {userData &&
+      {userData?
       <div>
         <Navbar>
           <Container>
-            <Navbar.Brand href='/posts'>
-                <span>게시물</span>
-            </Navbar.Brand>
+            <Row>
+              <Navbar.Brand href='/user/profile'>
+                  <span className={isActive('/user/profile')? selectedLinkClasses:''}>내 정보</span>
+              </Navbar.Brand>
+              <Navbar.Brand href='/posts'>
+                  <span className={isActive('/posts') ? selectedLinkClasses:''}>게시물</span>
+              </Navbar.Brand>
+            </Row>
           </Container>
         </Navbar>
         <br />
+        {/* 로그인 정보 */}
+        <Container>
+          <Row>
+            <b>{userData.username} 님</b>
+            <div>안녕하세요.</div>
+          </Row>
+        </Container>
+        <br />
+        {/* 버튼들 */}
+      <Container>
+        <Row>
+          <LogoutButton></LogoutButton>
+          <UnregisterButton></UnregisterButton>
+        </Row>
+      </Container>
+      <br/>
       </div>
+      :
+      <Container>
+        <Navbar>
+          <Navbar.Brand href='/auth/login'>
+            <span className={isActive('/auth/login') ? selectedLinkClasses:''}>로그인</span>
+            </Navbar.Brand>
+        </Navbar>
+      </Container>
       }
       <hr></hr>
       {/* 외부 링크 */}
@@ -90,11 +104,6 @@ export default function Sidebar({ isExpanded, onToggle, onHoverChange }: Sidebar
           </Navbar.Brand>
         </Container>
       </Navbar>
-      {/* 로그아웃 버튼 */}
-      {userData && <div>
-        <LogoutButton></LogoutButton>
-        </div>
-        }
       </div>
       }
     </nav>

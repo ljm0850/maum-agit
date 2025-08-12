@@ -17,3 +17,15 @@
   align-items: center;
   transition: width 0.3s ease, align-items 0.3s ease;
 }
+
+.active {
+  color: #007bff; /* 파란색으로 변경 */
+  font-weight: bold; /* 폰트를 굵게 */
+  border-left: 4px solid #007bff; /* 좌측에 선 추가 */
+  padding-left: 10px; /* 좌측 선과 텍스트 사이 간격 */
+  transition: all 0.3s ease; /* 부드러운 효과 */
+}
+
+/* .sidebar .active-link:hover {
+  color: #007bff;
+} */
