@@ -103,12 +103,14 @@ export default function IntroducePage() {
           <Container>
             <details>
               <summary>내 정보</summary>
+              <li>/user/profile</li>
               <li>내 정보창이 필요할 정도의 기능은 없어 잠시 폐기</li>
               <li>추후 게시물에 모두에게 공개되는 글을 만든다면, 필요하다고 판단</li>
             </details>
             <br />
             <details>
               <summary>게시물 디테일 페이지</summary>
+              <li>/posts/[id]</li>
               <li>초기엔 디테일 페이지를 따로 뒀으나, 게시글을 읽는 방식이 프로젝트 방향에 비해 너무 무겁다고 판단하여 변경</li>
             </details>
           </Container>
