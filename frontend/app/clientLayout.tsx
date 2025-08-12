@@ -43,13 +43,15 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }, [isLoggedIn, pathname, router]);
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', minWidth: '8vw' }}>
       <Sidebar 
         isExpanded={isSidebarExpanded}  
         onToggle={toggleSidebar} 
         onHoverChange={handleHoverChange} 
       />
-      <main style={{ marginLeft: pathname === '/auth/login'?'0px': isSidebarExpanded ? '200px' : '60px', transition: 'margin-left 0.3s ease' }}>{children}</main>
+      <main style={{ marginLeft: pathname === '/auth/login'?'0px': isSidebarExpanded ? '200px' : '60px', transition: 'margin-left 0.3s ease' }}>
+      {children}
+      </main>
     </div>
   );
 }
