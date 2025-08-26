@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist,createJSONStorage } from "zustand/middleware";
+import { persist, createJSONStorage, PersistOptions } from "zustand/middleware";
 import { UserInfo } from "../lib/api";
 
 interface AuthState {
@@ -12,7 +12,7 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>()(
-  persist(
+  persist<AuthState>(
     (set) => ({
       isLoggedIn: false,
       token: null,
@@ -23,13 +23,13 @@ export const useAuthStore = create<AuthState>()(
       logout: () => {
         set({ isLoggedIn: false, token: null, user: null });
       },
-      setToken: (token) => { // ✨ setToken 구현 ✨
+      setToken: (token) => {
         set({ token: token, isLoggedIn: !!token });
       },
     }),
     {
       name: 'auth-storage',
       storage: createJSONStorage(() => localStorage),
-    }
+    } as PersistOptions<AuthState>
   )
 );

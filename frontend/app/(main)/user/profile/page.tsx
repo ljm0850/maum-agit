@@ -11,7 +11,6 @@ export default function MyProfile() {
   
   return (
     <div>
-      {userData?.profileImageUrl && <img src={userData.profileImageUrl}></img>}
       <div>{userData?.username}님 안녕하세요</div>
       <div>회원가입일 : {userData?.createdAt}</div>
       <UnregisterButton />

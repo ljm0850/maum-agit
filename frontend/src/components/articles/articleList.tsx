@@ -10,13 +10,12 @@ import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
-import Carousel from 'react-bootstrap/Carousel';
 
 export default function ArticleList(){
   // 페이지네이션 파라미터
-  const [currentPage, setCurrentPage] = useState(1);
   const limit = 4;
-  const [currentTag, setCurrentTag] = useState<string | undefined>(undefined);
+  // const [currentTag, setCurrentTag] = useState<string | undefined>(undefined);
+  const [currentTag] = useState<string | undefined>(undefined);
 
   const lastElementRef = useRef(null);
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError,} = useMyPostInfiniteQuery(limit,currentTag);

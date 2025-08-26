@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 // import * as cookieParser from 'cookie-parser'; // cookie-parser 임포트
 import { ValidationPipe } from '@nestjs/common'; // ValidationPipe 임포트
 import { ConfigService } from '@nestjs/config'; // ConfigService 임포트 (PORT 환경변수 사용 시)
-
+import 'crypto';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 

@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getMyPostById, Post } from "@/src/lib/api";
 
 export default function ArticleDetail( {id} : {id:string}) {
-  const { data: article, isLoading, isError } = useQuery<Post>({
+  const { data: article, isLoading } = useQuery<Post>({
     queryKey: ['article', id],
     queryFn:()=>getMyPostById(id),
     staleTime: 1000 * 60 * 5,

@@ -21,7 +21,7 @@ export default function ArticleDetailModal({ isOpen, onClose, postId, onEditRequ
   const { setSelectedPost, clearSelectedPost } = useTempPostStore(); 
   
   const { data:post, isLoading, isError, error } = usePostDetailQuery(postId,isOpen);
-  const { mutate:deletePost, isPending:isDeleting } = useDeletePostMutation();
+  const { mutate:deletePost } = useDeletePostMutation();
 
   const handleUpdatePost = () => {
     if (post) setSelectedPost(post);

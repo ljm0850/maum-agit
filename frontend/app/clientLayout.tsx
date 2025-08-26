@@ -17,7 +17,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const pathname = usePathname(); // 현재 URL 경로 (ex: '/posts')
   const setPath = useUiStore((state)=> state.setPath);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const isHydrated = useAuthStore((state) => state._has ? true : false);
+  const isHydrated = typeof window !== 'undefined' ? useAuthStore.persist.hasHydrated() : false;
 
   useEffect(() => {
     setPath(pathname);
@@ -40,7 +40,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       return;
     }
 
-  }, [isLoggedIn, pathname, router]);
+  }, [isLoggedIn, pathname, router, isHydrated]);
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', minWidth: '8vw' }}>

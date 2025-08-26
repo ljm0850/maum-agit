@@ -18,7 +18,7 @@ interface SidebarProps {
   onHoverChange: (expanded: boolean) => void;
 }
 
-export default function Sidebar({ isExpanded, onToggle, onHoverChange }: SidebarProps) {
+export default function Sidebar({ isExpanded, onHoverChange }: SidebarProps) {
   // 내 정보
   const userData = useAuthStore.getState().user;
   const sidebarClasses = `${styles.sidebar} ${isExpanded ? styles.expanded : styles.collapsed}`;
