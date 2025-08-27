@@ -3,10 +3,16 @@ FROM node:18
 WORKDIR /app
 
 # 로컬에서 미리 빌드된 파일 복사
-COPY backend/dist ./dist
-COPY backend/node_modules ./node_modules
-COPY backend/package.json ./package.json
-COPY backend/.env ./.env
+# COPY backend/dist ./dist
+# COPY backend/node_modules ./node_modules
+# COPY backend/package.json ./package.json
+# COPY backend/.env ./.env
+# ...
+COPY dist ./dist
+COPY node_modules ./node_modules
+COPY package.json ./package.json
+COPY .env ./.env
+# ...
 
 EXPOSE 3001
 CMD ["npm", "run", "start:prod"]

@@ -9,7 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // 전역 프리픽스 설정: 모든 API 엔드포인트 앞에 '/api'가 붙게 됩니다.
-  // app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api');
 
   // 클라이언트로부터 오는 HTTP 요청의 쿠키를 파싱할 수 있음 => 추후 refreshToken용
   // app.use(cookieParser());

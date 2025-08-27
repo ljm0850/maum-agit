@@ -11,20 +11,54 @@ services:
       - backend
       - frontend
     restart: always
+    networks:
+      - my_network
 
   frontend:
-    image: 420606830898.dkr.ecr.ap-northeast-2.amazonaws.com/maum-agit-frontend:v1.0.1 # 태그 변경
+    image: 420606830898.dkr.ecr.ap-northeast-2.amazonaws.com/maum-agit-frontend:v1.0.1
     ports:
       - "3000:3000"
     restart: always
+    networks:
+      - my_network
 
   backend:
-    image: 420606830898.dkr.ecr.ap-northeast-2.amazonaws.com/maum-agit-backend:v1.0.1 # 태그 변경
+    image: 420606830898.dkr.ecr.ap-northeast-2.amazonaws.com/maum-agit-backend:v1.0.2
     ports:
       - "3001:3001"
     restart: always
+    depends_on:
+      - database
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3001"]
       interval: 30s
       timeout: 10s
       retries: 5
+    networks:
+      - my_network
+    command: npm run start:prod
+    env_file:
+    - ./backend/.env
+
+  database:
+    image: mysql:8.0
+    container_name: maum-agit_database
+    restart: always
+    env_file:
+      - ./backend/.env
+    environment:
+      MYSQL_USER: "maum_agit_user" # .env의 DATABASE_USER와 일치
+      MYSQL_PASSWORD: "maum_agit_ljm" # .env의 DATABASE_PASSWORD와 일치
+      MYSQL_DATABASE: "maum_agit_db_dev"
+      MYSQL_ROOT_PASSWORD: "wtfadfs"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - my_network
+
+volumes:
+  db_data:
+
+networks:
+  my_network:
+    driver: bridge
