@@ -16,7 +16,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const router = useRouter();
   const pathname = usePathname(); // 현재 URL 경로 (ex: '/posts')
   const setPath = useUiStore((state)=> state.setPath);
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const isLoggedIn = useAuthStore.getState().isLoggedIn
   const isHydrated = typeof window !== 'undefined' ? useAuthStore.persist.hasHydrated() : false;
 
   useEffect(() => {
@@ -24,8 +24,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }, [pathname, setPath]);
 
   useEffect(() => {
-    console.log("client layout에서 useEffect 작동")
-    console.log("현주소가 로그인 페이지임? : ",pathname==='/auth/login')
     if (!isHydrated) {
       return; // 하이드레이션이 완료될 때까지 함수 실행을 중단합니다.
     }
