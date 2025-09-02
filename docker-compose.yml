@@ -21,6 +21,8 @@ services:
     restart: always
     networks:
       - my_network
+    env_file:
+      - ./frontend/.env
 
   backend:
     image: 420606830898.dkr.ecr.ap-northeast-2.amazonaws.com/maum-agit-backend:v1.0.2
@@ -46,11 +48,6 @@ services:
     restart: always
     env_file:
       - ./backend/.env
-    environment:
-      MYSQL_USER: "maum_agit_user" # .env의 DATABASE_USER와 일치
-      MYSQL_PASSWORD: "maum_agit_ljm" # .env의 DATABASE_PASSWORD와 일치
-      MYSQL_DATABASE: "maum_agit_db_dev"
-      MYSQL_ROOT_PASSWORD: "wtfadfs"
     volumes:
       - db_data:/var/lib/mysql
     networks:
