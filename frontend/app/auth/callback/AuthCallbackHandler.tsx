@@ -50,11 +50,6 @@ export default function LoginCallbackPage(){
     checkAccessToken();
   })
 
-  // useEffect(()=> {
-  //   if (isLoggedIn) router.replace('/posts')
-  // },[isLoggedIn]
-  // )
-
   if (errMessage) {
     return (
       <div>

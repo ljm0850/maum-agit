@@ -5,7 +5,6 @@ import styles from './Login.module.css'
 export default function LoginPage(){
   const domain = process.env.NEXT_PUBLIC_API_URL?process.env.NEXT_PUBLIC_API_URL:'localhost:3000'
   const backendAuthUrl = `${domain}/api/auth/google`;
-  console.log("배ㄱ엔드어스유알엘",backendAuthUrl);
   return (
    <div className={styles.loginContainer}>
         <div className={styles.formSection}>
