@@ -29,7 +29,7 @@ export interface UserInfo {
     posts: Post[],
 }
 
-const API_BASE_URL = process.env.LOCAL_API_URL?process.env.LOCAL_API_URL:'/api/';
+const API_BASE_URL = process.env.NEXT_PUBLIC_LOCAL_API_URL?process.env.NEXT_PUBLIC_LOCAL_API_URL:'/api/';
 // const API_BASE_URL = '/api/';
 
 export const apiClient = axios.create({
@@ -68,6 +68,8 @@ apiClient.interceptors.response.use(
 
 // 유저
 export const getMyInfo = async (): Promise<UserInfo> => {
+  console.log("베이스 유알엘",API_BASE_URL);
+  console.log("env ???",process.env.LOCAL_API_URL)
   const res = await apiClient.get('users/me');
   return res.data;
 }
