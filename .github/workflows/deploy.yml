@@ -46,7 +46,7 @@ jobs:
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
+          username: ${{ secrets.ECR_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "./docker-compose.yml"
           target: ${{ secrets.PROJECT_PATH_ON_EC2 }}
@@ -61,9 +61,15 @@ jobs:
           envs: GITHUB_SHA
           script: |
             docker system prune -a -f
-            aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 420606830898.dkr.ecr.ap-northeast-2.amazonaws.com
-            cd ${{ secrets.PROJECT_PATH_ON_EC2 }}
-            docker-compose down
-            sudo cp /etc/letsencrypt/live/ljmproject.store/privkey.pem ./nginx/ssl/privkey.pem
+
+            sudo systemctl stop nginx
+            sudo chown ubuntu:ubuntu /etc/nginx/ssl
+            cd /home/ubuntu/maum-agit
+            
+            docker-compose down --volumes
+
+            sudo cp /etc/letsencrypt/live/ljmproject.store/privkey.pem ./nginx/ssl/
+            sudo chown ubuntu:ubuntu ./nginx/ssl/privkey.pem
+
             docker-compose pull
             docker-compose up -d --force-recreate
