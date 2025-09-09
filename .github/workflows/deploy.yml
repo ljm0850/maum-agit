@@ -46,7 +46,7 @@ jobs:
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.ECR_USERNAME }}
+          username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "./docker-compose.yml"
           target: ${{ secrets.PROJECT_PATH_ON_EC2 }}
@@ -62,14 +62,13 @@ jobs:
           script: |
             docker system prune -a -f
 
-            sudo systemctl stop nginx
-            sudo chown ubuntu:ubuntu /etc/nginx/ssl
             cd /home/ubuntu/maum-agit
             
             docker-compose down --volumes
 
             sudo cp /etc/letsencrypt/live/ljmproject.store/privkey.pem ./nginx/ssl/
-            sudo chown ubuntu:ubuntu ./nginx/ssl/privkey.pem
+            sudo cp /etc/letsencrypt/live/ljmproject.store/fullchain.pem ./nginx/ssl/
+            sudo chown -R ubuntu:ubuntu ./nginx/ssl
 
             docker-compose pull
             docker-compose up -d --force-recreate
