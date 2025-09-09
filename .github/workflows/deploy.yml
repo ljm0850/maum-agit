@@ -52,6 +52,7 @@ jobs:
           sync: true
           remote_path: ${{ secrets.PROJECT_PATH_ON_EC2 }}
           script: |
+            scp ./docker-compose.yml ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:${{ secrets.PROJECT_PATH_ON_EC2 }}/docker-compose.yml
             cd ${{ secrets.PROJECT_PATH_ON_EC2 }}
             docker-compose down
             docker-compose pull
