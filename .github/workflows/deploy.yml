@@ -1,0 +1,55 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # AWS Credentials 설정
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      # ECR 로그인
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # Docker 이미지 빌드 및 푸시 (프론트엔드)
+      - name: Build and push frontend image
+        run: |
+          docker buildx build --platform linux/amd64 \
+          -t ${{ secrets.ECR_REPOSITORY_FRONTEND }}:${{ github.sha }} \
+          --build-arg NEXT_PUBLIC_API_URL=${{ secrets.FRONTEND_API_URL }} \
+          ./frontend --push
+
+      # Docker 이미지 빌드 및 푸시 (백엔드)
+      - name: Build and push backend image
+        run: |
+          docker buildx build --platform linux/amd64 \
+          -t ${{ secrets.ECR_REPOSITORY_BACKEND }}:${{ github.sha }} \
+          ./backend --push
+
+      # EC2에 SSH 접속 후 배포 (Docker Compose)
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ${{ secrets.PROJECT_PATH_ON_EC2 }}
+            docker-compose down
+            docker-compose pull
+            docker-compose up -d --force-recreate
