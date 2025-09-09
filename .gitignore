@@ -23,3 +23,6 @@ Thumbs.db
 *.sqlite
 .dockerignore
 .docker
+
+# 기타
+nginx/ssl/privkey1.pem
