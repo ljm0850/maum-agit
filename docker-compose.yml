@@ -15,7 +15,7 @@ services:
       - my_network
 
   frontend:
-    image: 420606830898.dkr.ecr.ap-northeast-2.amazonaws.com/maum-agit-frontend:v1.0.1
+    image: 420606830898.dkr.ecr.ap-northeast-2.amazonaws.com/maum-agit-frontend:${GITHUB_SHA}
     ports:
       - "3000:3000"
     restart: always
@@ -25,7 +25,7 @@ services:
       - ./frontend/.env
 
   backend:
-    image: 420606830898.dkr.ecr.ap-northeast-2.amazonaws.com/maum-agit-backend:v1.0.2
+    image: 420606830898.dkr.ecr.ap-northeast-2.amazonaws.com/maum-agit-backend:${GITHUB_SHA}
     ports:
       - "3001:3001"
     restart: always

@@ -48,6 +48,9 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          envs: GITHUB_SHA
+          sync: true
+          remote_path: ${{ secrets.PROJECT_PATH_ON_EC2 }}
           script: |
             cd ${{ secrets.PROJECT_PATH_ON_EC2 }}
             docker-compose down
