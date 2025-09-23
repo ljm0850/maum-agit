@@ -66,6 +66,10 @@ jobs:
             
             docker-compose down --volumes
 
+            # EC2에서 ECR에 직접 로그인하는 단계 추가
+            aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 420606830898.dkr.ecr.ap-northeast-2.amazonaws.com
+
+            # certbot으로 발급받은 ssl 인증서 파일 복사
             sudo cp /etc/letsencrypt/live/ljmproject.store/privkey.pem ./nginx/ssl/
             sudo cp /etc/letsencrypt/live/ljmproject.store/fullchain.pem ./nginx/ssl/
             sudo chown -R ubuntu:ubuntu ./nginx/ssl
