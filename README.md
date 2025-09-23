@@ -1,6 +1,7 @@
 # 토이 프로젝트 : maum-agit
 
 - 배포 주소 : https://ljmproject.store
+  - 프로젝트 상황에 서술한 메모리 문제로 안들어 가질 수 있습니다.
 
 ## 목차
 
