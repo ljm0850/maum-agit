@@ -1,0 +1,15 @@
+# docker-compose.local.yml
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    image: maum-agit-frontend:local
+    env_file:
+      - ./frontend/.env
+
+  backend:
+    build: ./backend
+    image: maum-agit-backend:local
+    env_file:
+    - ./backend/.env
