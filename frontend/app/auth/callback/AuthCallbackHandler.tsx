@@ -19,7 +19,7 @@ export default function LoginCallbackPage(){
   const setToken = useAuthStore((state)=>state.setToken);
 
   useEffect(()=>{
-    if (isLoggedIn) return
+    if (isLoggedIn || errMessage) return
     const checkAccessToken = async () =>{
       setIsLoading(true);
       const accessToken = searchParams.get('accessToken');
@@ -48,7 +48,7 @@ export default function LoginCallbackPage(){
       }
     }
     checkAccessToken();
-  })
+  },[])
 
   if (errMessage) {
     return (
