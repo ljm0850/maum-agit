@@ -102,7 +102,7 @@
   - 깃 허브 main branch push => **깃허브 action**으로 aws EC2 자동 => 배포
 
 - 백엔드
-  - Nuxtjs , MySQL(database), TypeORM
+  - Nestjs , MySQL(database), TypeORM
 - 프론트엔드
   - Next.js, TypeScript, React Query, zustand, axios, HTML5, CSS3, bootstrap
 
